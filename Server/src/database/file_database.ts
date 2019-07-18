@@ -4,9 +4,16 @@ import path from "path";
 import DbResponse, {couldNotBeParsedResponse, fileNotFoundResponse} from "./db_response";
 import fs from "fs";
 import getFolderSize from "get-folder-size";
+import SSEMessage, {SSEEvent} from "../response/sse_message";
 
 export default class FileDatabase implements IDatabase {
+    sse?: any;
     filesDir = path.join(__dirname, '..', '..', 'files');
+
+
+    constructor(sse?: any) {
+        this.sse = sse;
+    }
 
     async addFile(dbFile: DbFile, currentFileName: string, notDeleteAllRunOut?: boolean): Promise<DbResponse<DbFile | any>> {
         try {
@@ -54,13 +61,18 @@ export default class FileDatabase implements IDatabase {
                 if (dbFile.availableUntil != null) {
                     if (dbFile.availableUntil.valueOf() - new Date().valueOf() < 0) {
                         let tmpDbResponse = await this.deleteFileByFileName(dbFile.fileName);
-                        if(tmpDbResponse.success){
+                        if (tmpDbResponse.success) {
                             deletedFiles.push(dbFile);
                         } else {
                             return dbResponse;
                         }
                     }
                 }
+            }
+            if (deletedFiles.length > 0) {
+                //todo this is not a nice and clean solution to send updates to the client but it works
+                let sseMessage = new SSEMessage(SSEEvent.FilesDeleted, deletedFiles);
+                this.sse.send(sseMessage, sseMessage.event);
             }
             return new DbResponse<DbFile[]>(true, deletedFiles);
         } catch (e) {

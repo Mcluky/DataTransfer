@@ -17,6 +17,7 @@
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
+    "express-sse": "^0.5.1",
     "get-folder-size": "^2.0.1",
     "morgan": "^1.9.1"
   },

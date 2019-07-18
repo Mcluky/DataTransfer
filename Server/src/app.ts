@@ -18,6 +18,7 @@ const server = express();
 server.use(express.static(path.join(__dirname, '..', 'static')));
 server.use(logger('dev'));
 
+//todo dockerize
 let db: IDatabase = new FileDatabase();
 
 //Default place for saving uploaded files

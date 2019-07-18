@@ -43,7 +43,7 @@ export default class DbFile {
     }
 
     public static fromId(id: string, fileName?: string): DbFile {
-        let parts = fileName.split(";");
+        let parts = id.split(";");
         if(parts.length != 5)
             return null;
         let uploadDate = new Date(parts[0]);

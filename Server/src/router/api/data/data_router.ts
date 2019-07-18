@@ -3,16 +3,17 @@ import FileDatabase from "../../../database/file_database";
 import IDatabase from "../../../database/i_database";
 import {returnException, returnSuccess} from "../../../response/response";
 import DbFile from "../../../database/db_file";
-import HttpException, {
-    couldNotBeParsedException,
-    fileNotFoundException,
-    storageFullException
-} from "../../../response/http_exception";
-import * as path from "path";
+import HttpException, {couldNotBeParsedException, fileNotFoundException} from "../../../response/http_exception";
+import path from "path";
+// @ts-ignore
+import SSE from "express-sse";
+import SSEMessage, {SSEEvent} from "../../../response/sse_message";
 
 const dataRouter = express.Router();
 
-const db: IDatabase = new FileDatabase();
+let sse = new SSE(new SSEMessage(SSEEvent.handshake, null), {isSerialized: false});
+
+const db: IDatabase = new FileDatabase(sse);
 
 dataRouter.get("/", async (req, res, next) => {
     let dbResponse = await db.getAllFiles();
@@ -23,6 +24,8 @@ dataRouter.get("/", async (req, res, next) => {
         returnException(res, HttpException.fromDbResponse(dbResponse));
     }
 });
+
+dataRouter.get("/sse-updates", sse.init);
 
 dataRouter.get("/:id", async (req, res, next) => {
     let fileId = req.params.id;
@@ -38,6 +41,7 @@ dataRouter.get("/:id", async (req, res, next) => {
 
 dataRouter.post("/", async (req, res, next) => {
     let clientIp = (req.headers['x-forwarded-for'][0] || req.connection.remoteAddress || '').split(',')[0].trim();
+    let newFiles: DbFile[] = [];
 
     for (let fileKey in req.files) {
         let name = req.files[fileKey].name;
@@ -54,12 +58,17 @@ dataRouter.post("/", async (req, res, next) => {
 
         let dbFile = new DbFile(name, uploadDate, hash, clientIp, availableUntil);
 
-        let dbResponse = await db.addFile(dbFile, currentFileName)
-        if (dbResponse.success) {
-            returnSuccess(res, dbResponse.data);
-        } else {
-            returnException(res, HttpException.fromDbResponse(dbResponse))
-        }
+        let dbResponse = await db.addFile(dbFile, currentFileName);
+        if (!dbResponse.success)
+            returnException(res, HttpException.fromDbResponse(dbResponse));
+    }
+
+    if (newFiles.length > 0) {
+        let sseMessage = new SSEMessage(SSEEvent.NewFiles, newFiles);
+        sse.send(sseMessage, sseMessage.event);
+        returnSuccess(res, newFiles);
+    } else {
+        returnException(res, new HttpException(400, "not_file_submitted", "There was no file found in the request."))
     }
 });
 
@@ -69,6 +78,8 @@ dataRouter.delete("/:id", async (req, res, next) => {
     let dbResponse = await db.deleteFileById(fileId);
 
     if (dbResponse.success) {
+        let sseMessage = new SSEMessage(SSEEvent.FilesDeleted, [dbResponse.data]);
+        sse.send(sseMessage, sseMessage.event);
         returnSuccess(res, dbResponse.data);
     } else {
         returnException(res, HttpException.fromDbResponse(dbResponse));
@@ -90,6 +101,5 @@ dataRouter.get("/download/:id", async (req, res, next) => {
         returnException(res, fileNotFoundException)
     }
 });
-
 
 export default dataRouter;
