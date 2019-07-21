@@ -72,7 +72,7 @@ export default class FileDatabase implements IDatabase {
             if (deletedFiles.length > 0) {
                 //todo this is not a nice and clean solution to send updates to the client but it works
                 let sseMessage = new SSEMessage(SSEEvent.FilesDeleted, deletedFiles);
-                this.sse.send(sseMessage, sseMessage.event);
+                this.sse.send(sseMessage);
             }
             return new DbResponse<DbFile[]>(true, deletedFiles);
         } catch (e) {

@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b7706b57-d7b9-40d7-aef8-1d5563f24e2e" name="Default Changelist" comment=":sparkles: :construction: :bug: Fixed small bugs/issues on server, initial commit on client">
-      <change afterPath="$PROJECT_DIR$/src/components/FileIcon.svelte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/http/public_ip.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/stores/files_array_store.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/font_awsome_filetyp_mapper/extensions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/font_awsome_filetyp_mapper/icons.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/font_awsome_filetyp_mapper/mapper.js" afterDir="false" />
+    <list default="true" id="b7706b57-d7b9-40d7-aef8-1d5563f24e2e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/http/local_id.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Server/static/bundle.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Server/static/bundle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Server/static/favicon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Server/static/global.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/global.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/global.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/File.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/File.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/FileIcon.svelte" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/FileWindow.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/FileWindow.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Form.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/http/communicator.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/http/communicator.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/stores/file_store.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/file_store.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/http/public_ip.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/files_array_store.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/files_array_store.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/database/db_file.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/database/db_file.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/src/database/file_database.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/database/file_database.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/src/router/api/data/data_router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/router/api/data/data_router.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/static/index.html" afterDir="false" />
     </list>
     <ignored path="C:\Projects\DataTransfer\Client\build/" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -32,13 +35,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/App.svelte">
+        <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="17" column="7" selection-start-line="17" selection-start-column="7" selection-end-line="17" selection-end-column="7" />
-              <folding>
-                <element signature="e#35#79#0#HTML" expanded="true" />
-              </folding>
+            <state relative-caret-position="340">
+              <caret line="20" column="15" selection-start-line="20" selection-start-column="15" selection-end-line="20" selection-end-column="15" />
             </state>
           </provider>
         </entry>
@@ -46,8 +46,38 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/http/communicator.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="31">
-              <caret line="79" column="43" lean-forward="true" selection-start-line="79" selection-start-column="43" selection-end-line="79" selection-end-column="43" />
+            <state relative-caret-position="153">
+              <caret line="9" column="23" lean-forward="true" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
+              <folding>
+                <element signature="e#0#36#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/http/local_id.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="1" column="15" selection-start-line="1" selection-start-column="15" selection-end-line="1" selection-end-column="15" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/App.svelte">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-60">
+              <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/global.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="382">
+              <caret line="63" selection-start-line="63" selection-end-line="63" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -55,10 +85,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/FileWindow.svelte">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+            <state relative-caret-position="51">
+              <caret line="3" column="36" lean-forward="true" selection-start-line="3" selection-start-column="36" selection-end-line="3" selection-end-column="36" />
               <folding>
-                <element signature="e#13#60#0#HTML" expanded="true" />
+                <element signature="e#566#591#0#HTML" expanded="true" />
+                <element signature="e#786#812#0#HTML" expanded="true" />
+                <element signature="e#879#899#0#HTML" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -67,38 +99,21 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/File.svelte">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="93" lean-forward="true" selection-start-line="15" selection-start-column="93" selection-end-line="15" selection-end-column="93" />
+            <state relative-caret-position="510">
+              <caret line="30" column="8" lean-forward="true" selection-start-line="30" selection-start-column="8" selection-end-line="30" selection-end-column="8" />
               <folding>
                 <element signature="e#13#58#0#HTML" expanded="true" />
+                <element signature="e#911#972#0#HTML" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/FileIcon.svelte">
+        <entry file="file://$PROJECT_DIR$/src/stores/files_array_store.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" selection-start-line="2" selection-end-line="2" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/stores/exception_store.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" column="38" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/utils/font_awsome_filetyp_mapper/mapper.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="31" column="39" selection-start-line="31" selection-start-column="16" selection-end-line="31" selection-end-column="39" />
+            <state relative-caret-position="221">
+              <caret line="13" selection-start-line="13" selection-end-line="13" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -116,21 +131,14 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/http/public_ip.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="27" selection-start-column="16" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/Form.svelte">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="30" column="26" selection-start-line="30" selection-start-column="26" selection-end-line="30" selection-end-column="26" />
+            <state relative-caret-position="145">
+              <caret line="81" column="5" selection-start-line="81" selection-start-column="5" selection-end-line="81" selection-end-column="5" />
               <folding>
                 <element signature="e#13#71#0#HTML" expanded="true" />
+                <element signature="e#2427#2474#0#HTML" expanded="true" />
+                <element signature="e#4244#4263#0#HTML" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -158,9 +166,14 @@
       <find>file.</find>
       <find>output.g</find>
       <find>aaaaa</find>
-      <find>button</find>
-      <find>ajax</find>
       <find>5000</find>
+      <find>console.</find>
+      <find>ajax</find>
+      <find>align</find>
+      <find>fromThisId</find>
+      <find>button</find>
+      <find>time of</find>
+      <find>slide</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -186,29 +199,32 @@
         <option value="$PROJECT_DIR$/src/stores/ToastStore.js" />
         <option value="$PROJECT_DIR$/src/stores/exception_store.js" />
         <option value="$PROJECT_DIR$/src/stores/toast_store.js" />
-        <option value="$PROJECT_DIR$/src/stores/files_array_store.js" />
         <option value="$PROJECT_DIR$/src/components/FileElement.svelte" />
         <option value="$PROJECT_DIR$/src/components/asfasfasfasf.svelte" />
-        <option value="$PROJECT_DIR$/src/http/communicator.js" />
         <option value="$PROJECT_DIR$/src/stores/file_store.js" />
         <option value="$PROJECT_DIR$/src/utils/font_awsome_mime_type_mapper.js" />
         <option value="$PROJECT_DIR$/src/utils/font_awsome_filetyp_mapper/mapper.js" />
         <option value="$PROJECT_DIR$/src/utils/font_awsome_filetyp_mapper/icons.js" />
         <option value="$PROJECT_DIR$/src/utils/font_awsome_filetyp_mapper/extensions.js" />
         <option value="$PROJECT_DIR$/src/components/FileIcon.svelte" />
-        <option value="$PROJECT_DIR$/src/components/Form.svelte" />
         <option value="$PROJECT_DIR$/src/http/getPublicIp.js" />
-        <option value="$PROJECT_DIR$/src/App.svelte" />
         <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/src/http/public_ip.js" />
+        <option value="$PROJECT_DIR$/src/http/local_ip.js" />
+        <option value="$PROJECT_DIR$/src/http/local_id.js" />
+        <option value="$PROJECT_DIR$/src/App.svelte" />
+        <option value="$PROJECT_DIR$/src/components/Form.svelte" />
+        <option value="$PROJECT_DIR$/public/global.css" />
+        <option value="$PROJECT_DIR$/src/http/communicator.js" />
         <option value="$PROJECT_DIR$/src/components/File.svelte" />
+        <option value="$PROJECT_DIR$/src/stores/files_array_store.js" />
         <option value="$PROJECT_DIR$/src/components/FileWindow.svelte" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1273" />
-    <option name="width" value="1294" />
+    <option name="x" value="1119" />
+    <option name="width" value="1448" />
     <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -323,9 +339,20 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
+        <item itemvalue="npm.start" />
         <item itemvalue="npm.build" />
       </list>
     </recent_temporary>
@@ -341,7 +368,7 @@
       <option name="presentableId" value="Default" />
       <updated>1563491836011</updated>
       <workItem from="1563491837246" duration="21396000" />
-      <workItem from="1563651056840" duration="37042000" />
+      <workItem from="1563651056840" duration="51749000" />
     </task>
     <task id="LOCAL-00001" summary=":sparkles: :construction: :bug: Fixed small bugs/issues on server, initial commit on client">
       <created>1563667349924</created>
@@ -350,17 +377,24 @@
       <option name="project" value="LOCAL" />
       <updated>1563667349924</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary=":construction: :bug: Fixed small bugs/issues on server, work in progress on client">
+      <created>1563721080628</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1563721080628</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58438000" />
+    <option name="totallyTimeSpent" value="73145000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1273" y="0" width="1294" height="1047" extended-state="0" />
+    <frame x="1119" y="0" width="1448" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22269504" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -387,7 +421,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value=":sparkles: :construction: :bug: Fixed small bugs/issues on server, initial commit on client" />
-    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: :construction: :bug: Fixed small bugs/issues on server, initial commit on client" />
+    <MESSAGE value=":construction: :bug: Fixed small bugs/issues on server, work in progress on client" />
+    <option name="LAST_COMMIT_MESSAGE" value=":construction: :bug: Fixed small bugs/issues on server, work in progress on client" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/package-lock.json">
@@ -442,20 +477,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="196">
           <caret line="251" column="33" selection-start-line="251" selection-start-column="33" selection-end-line="251" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="28" column="32" selection-start-line="28" selection-start-column="32" selection-end-line="28" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/global.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="26" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
         </state>
       </provider>
     </entry>
@@ -521,16 +542,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/stores/files_array_store.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="54" selection-start-line="10" selection-start-column="54" selection-end-line="10" selection-end-column="54" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/stores/file_store.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
@@ -562,13 +573,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/stores/exception_store.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="38" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/utils/font_awsome_filetyp_mapper/mapper.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
@@ -593,30 +597,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/communicator.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="31">
-          <caret line="79" column="43" lean-forward="true" selection-start-line="79" selection-start-column="43" selection-end-line="79" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.svelte">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="7" selection-start-line="17" selection-start-column="7" selection-end-line="17" selection-end-column="7" />
-          <folding>
-            <element signature="e#35#79#0#HTML" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="44" selection-start-line="14" selection-start-column="44" selection-end-line="14" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/http/public_ip.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -624,13 +604,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Form.svelte">
+    <entry file="file://$PROJECT_DIR$/src/stores/exception_store.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="30" column="26" selection-start-line="30" selection-start-column="26" selection-end-line="30" selection-end-column="26" />
-          <folding>
-            <element signature="e#13#71#0#HTML" expanded="true" />
-          </folding>
+        <state relative-caret-position="170">
+          <caret line="10" column="38" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/http/local_ip.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="14" selection-start-column="14" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -641,22 +625,92 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="44" selection-start-line="14" selection-start-column="44" selection-end-line="14" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.svelte">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-60">
+          <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/global.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="63" selection-start-line="63" selection-end-line="63" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/http/local_id.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="15" selection-start-line="1" selection-start-column="15" selection-end-line="1" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/http/communicator.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="23" lean-forward="true" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="15" selection-start-line="20" selection-start-column="15" selection-end-line="20" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/stores/files_array_store.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Form.svelte">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="81" column="5" selection-start-line="81" selection-start-column="5" selection-end-line="81" selection-end-column="5" />
+          <folding>
+            <element signature="e#13#71#0#HTML" expanded="true" />
+            <element signature="e#2427#2474#0#HTML" expanded="true" />
+            <element signature="e#4244#4263#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/File.svelte">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="93" lean-forward="true" selection-start-line="15" selection-start-column="93" selection-end-line="15" selection-end-column="93" />
+        <state relative-caret-position="510">
+          <caret line="30" column="8" lean-forward="true" selection-start-line="30" selection-start-column="8" selection-end-line="30" selection-end-column="8" />
           <folding>
             <element signature="e#13#58#0#HTML" expanded="true" />
+            <element signature="e#911#972#0#HTML" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/FileWindow.svelte">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+        <state relative-caret-position="51">
+          <caret line="3" column="36" lean-forward="true" selection-start-line="3" selection-start-column="36" selection-end-line="3" selection-end-column="36" />
           <folding>
-            <element signature="e#13#60#0#HTML" expanded="true" />
+            <element signature="e#566#591#0#HTML" expanded="true" />
+            <element signature="e#786#812#0#HTML" expanded="true" />
+            <element signature="e#879#899#0#HTML" expanded="true" />
           </folding>
         </state>
       </provider>

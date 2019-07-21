@@ -82,9 +82,9 @@
     }
 </style>
 
-<div class="section">
+<div class="section" style="margin-top: -60px; margin-bottom: 0px">
     <div class="level">
-        <div class="level-left">
+        <div class="level-item">
             <div class="box">
                 <div class="container">
                     <!--<Field label="File name">
@@ -95,7 +95,7 @@
                                 bind:checked={metaFile.availableForever}>Available forever
                         </Switch>
                     </Field>
-                    <Field label="Time of availability">
+                    <Field label="Time of availability (hours)">
                         <Input disabled={disabledTimeOfAvailability} type="number"
                                bind:value={metaFile.availableForHours}
                                placeholder="Hours">_</Input>
@@ -113,7 +113,7 @@
                                     </span>
                                 </span>
                                 <!-- set this to high on purpose so it looks better-->
-                                <span class="file-name" style="width: 10000px">
+                                <span class="file-name ultra-width" style="width: 30vw">
                                     {filesString()}
                                 </span>
                             </label>

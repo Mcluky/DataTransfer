@@ -2,34 +2,44 @@
     import {fileStore} from "../stores/file_store";
     import {filesArrayStore} from "../stores/files_array_store";
     import File from "./File.svelte"
-    import {getPublicIp} from "../http/public_ip";
+    import {getLocalId} from "../http/local_id";
 
-    let publicIp = 0;
-    $: fromThisIp = (ip) => ip === publicIp;
-
-    getPublicIp().then(ip => {
-       publicIp = ip
-    });
+    let localId = getLocalId();
+    $: fromThisId = (id) => id === localId;
 
     let files = [];
 
     const unsubscribeFilesArrayStore = filesArrayStore.subscribe(value => {
-        console.debug("files", files);
+        setTimeout(scrollToBottom, 500);
+        //innerWindow.scrollTop = innerWindow.scrollHeight;
         files = value;
     });
 
+    function scrollToBottom(){
+        let innerWindow = document.getElementById("innerWindow");
+        innerWindow.scrollTop = innerWindow.scrollHeight ;
+    }
 </script>
 
 <style>
+    #innerWindow {
+        height: 55vh;
+        overflow-y: scroll;
+        padding: 10px;
+        scroll-behavior: smooth;
+    }
 </style>
 
-<div class="section">
-    <div class="box" >
-        <div class="container">
+<div class="section" style="margin-top: -25px">
+    <div class="box">
+        <div class="container" id="innerWindow"  >
             {#each files as file, i}
-                <File file={file} fromThisIp={fromThisIp(file.uploadedBy)}/>
+                <File file={file} fromThisId={fromThisId(file.uploadedBy)}/>
             {:else}
-                <p>No Files</p>
+                <div style="text-align: center">
+                    <p>No Files yet</p>
+                    <a class="button is-loading" style="border: none">-</a>
+                </div>
             {/each}
         </div>
     </div>

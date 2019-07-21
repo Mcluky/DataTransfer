@@ -19,9 +19,38 @@
 </script>
 
 <style>
+    .flexBox {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    @media (min-width: 960px) {
+        .flexBox {
+            display: flex;
+            flex-direction: column;
+            width: 960px;
+        }
+    }
+
+    @media (min-width: 960px) {
+        #parentContainer {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 960px) {
+        #parentContainer {
+            width: 100%;
+        }
+    }
 </style>
 
-<h1>Hello {name}!</h1>
-<FileWindow/>
-<Form/>
-
+<div id="parentContainer">
+    <div class="flexBox">
+        <FileWindow/>
+        <Form/>
+    </div>
+</div>

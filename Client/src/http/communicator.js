@@ -1,4 +1,5 @@
 import {originUrl} from "../config";
+import {getLocalId} from "./local_id";
 
 export function getAllFiles() {
     const url = originUrl + '/api/data';
@@ -46,7 +47,7 @@ export function deleteFile(id) {
 
         request.onreadystatechange = function () {
             if (request.readyState === 4) {
-                console.debug("Received http response:", response);
+                console.debug("Received http response:", request);
                 returnPromise(request, resolve, reject);
             }
         };
@@ -63,7 +64,8 @@ export function ajaxFileUpload(files, availableForever, availableUntil) {
     const url = originUrl + '/api/data/';
     console.debug("Requesting: (POST) ", url);
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+        let uploadedBy = await getLocalId();
 
         let formData = new FormData();
         for (let i = 0; i < files.length; i++)
@@ -71,6 +73,7 @@ export function ajaxFileUpload(files, availableForever, availableUntil) {
 
         formData.append('availableForever', availableForever);
         formData.append('availableUntil', availableUntil);
+        formData.append('uploadedBy', uploadedBy)
         //todo maybe add text
         //formData.append('text', text.value);
 

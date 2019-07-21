@@ -42,7 +42,8 @@ dataRouter.get("/:id", async (req, res, next) => {
 dataRouter.post("/", async (req, res, next) => {
     console.log("Received file upload request");
     // @ts-ignore
-    let clientIp = (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '').split(',')[0].trim();
+    //let clientIp = (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '').split(',')[0].trim();
+    let uploadedBy = req.fields.uploadedBy as string;
     let newFiles: DbFile[] = [];
 
     for (let fileKey in req.files) {
@@ -59,7 +60,7 @@ dataRouter.post("/", async (req, res, next) => {
             availableUntil = req.fields.availableUntil ? new Date(parseInt(req.fields.availableUntil)) : new Date().setHours(new Date().getHours() + process.env.DEFAULT_AVAILABLE_TIME_MIN);
         }
 
-        let dbFile = new DbFile(name, uploadDate, hash, clientIp, availableUntil);
+        let dbFile = new DbFile(name, uploadDate, hash, uploadedBy, availableUntil);
         newFiles.push(dbFile);
 
         let dbResponse = await db.addFile(dbFile, currentFileName);
@@ -83,7 +84,7 @@ dataRouter.delete("/:id", async (req, res, next) => {
 
     if (dbResponse.success) {
         let sseMessage = new SSEMessage(SSEEvent.FilesDeleted, [dbResponse.data]);
-        sse.send(sseMessage, sseMessage.event);
+        sse.send(sseMessage);
         returnSuccess(res, dbResponse.data);
     } else {
         returnException(res, HttpException.fromDbResponse(dbResponse));
@@ -102,6 +103,7 @@ dataRouter.get("/download/:id", async (req, res, next) => {
         console.log("starting download...");
         res.download(path.join(db.filesDir, dbFile.fileName), dbFile.name, err => console.error(err));
     } else {
+        //todo make a nice looking html page
         returnException(res, fileNotFoundException)
     }
 });
