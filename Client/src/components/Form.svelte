@@ -1,0 +1,137 @@
+<script>
+    import {Field, Input, Icon, Switch, Button, Toast} from 'svelma'
+    import {ajaxFileUpload} from "../http/communicator"
+    import {toastStore, ToastStoreData} from "../stores/toast_store";
+
+    let metaFile = {
+        availableForever: false,
+        availableUntil: new Date(),
+        availableForHours: 1
+    };
+
+    $: metaFile.availableUntil = new Date().setHours(new Date().getHours() + metaFile.availableForHours);
+
+    let inputFiles = [];
+    $: filesString = function () {
+        let string = "";
+        for (let ipF of inputFiles) {
+            string += ipF.name;
+            string += ", ";
+        }
+        return string;
+    };
+
+
+    $: disabledTimeOfAvailability = metaFile.availableForever;
+
+    let loading = false;
+
+    function onClickSave(event) {
+        console.debug("onClickSave");
+        // todo change this if text is added
+        if (inputFiles.length === 0) {
+            toastStore.update(tsd => new ToastStoreData('You must at least select one file.', 'is-danger', 'is-top'))
+            return
+        }
+
+        if (!loading) {
+            loading = true;
+            console.debug("starting upload...");
+            ajaxFileUpload(inputFiles, metaFile.availableForever, metaFile.availableUntil)
+                    .then(value => {
+                        loading = false;
+                    }).catch(reason => {
+                //todo do something meaningful
+            });
+        } else {
+            toastStore.update(tsd => new ToastStoreData('Upload is already in progress, please wait until its finished.', 'is-danger', 'is-top'))
+        }
+    }
+
+
+</script>
+
+<style>
+    h1 {
+        color: purple;
+    }
+
+    #save-button-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+
+    .button {
+        text-decoration: none;
+    }
+
+    .ripple {
+        background-position: center;
+        transition: background 0.8s;
+    }
+
+    .ripple:hover {
+        background: #23d160 radial-gradient(circle, transparent 1%, #23D160 1%) center/15000%;
+    }
+
+    .ripple:active {
+        background-color: #23D160;
+        background-size: 100%;
+        transition: background 0s;
+    }
+</style>
+
+<div class="section">
+    <div class="level">
+        <div class="level-left">
+            <div class="box">
+                <div class="container">
+                    <!--<Field label="File name">
+                        <Input type="text" bind:value={metaFile.name} placeholder="File name"/>
+                    </Field>-->
+                    <Field>
+                        <Switch size="is-small"
+                                bind:checked={metaFile.availableForever}>Available forever
+                        </Switch>
+                    </Field>
+                    <Field label="Time of availability">
+                        <Input disabled={disabledTimeOfAvailability} type="number"
+                               bind:value={metaFile.availableForHours}
+                               placeholder="Hours">_</Input>
+                    </Field>
+                    <Field>
+                        <div class="file has-name">
+                            <label class="file-label">
+                                <input class="file-input" type="file" multiple bind:files={inputFiles}>
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                        <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span class="file-label">
+                                        Choose files...
+                                    </span>
+                                </span>
+                                <!-- set this to high on purpose so it looks better-->
+                                <span class="file-name" style="width: 10000px">
+                                    {filesString()}
+                                </span>
+                            </label>
+                        </div>
+                    </Field>
+                    <Field>
+                        <div id="save-button-container">
+                            {#if loading}
+                                <a class="button is-success ripple is-loading" on:click={onClickSave}><i
+                                        class="fas fa-check"></i>&nbsp Save</a>
+                            {:else}
+                                <a class="button is-success ripple" on:click={onClickSave}><i class="fas fa-check"></i>&nbsp
+                                    Save</a>
+                            {/if}
+                        </div>
+                    </Field>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

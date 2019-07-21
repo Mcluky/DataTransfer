@@ -40,13 +40,15 @@ dataRouter.get("/:id", async (req, res, next) => {
 });
 
 dataRouter.post("/", async (req, res, next) => {
-    let clientIp = (req.headers['x-forwarded-for'][0] || req.connection.remoteAddress || '').split(',')[0].trim();
+    console.log("Received file upload request");
+    // @ts-ignore
+    let clientIp = (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '').split(',')[0].trim();
     let newFiles: DbFile[] = [];
 
     for (let fileKey in req.files) {
         let name = req.files[fileKey].name;
         let currentFileName = req.files[fileKey].path.replace(/^.*[\\\/]/, '');
-        let hash = req.files[fileKey].path.split("_")[1].replace(/^.*[\\\/]/, '');
+        let hash = req.files[fileKey].path.replace(/^.*[\\\/]/, '').split("_")[1];
         let uploadDate = new Date();
         let availableUntil: Date;
         if (req.fields.availableForever) {
@@ -57,6 +59,7 @@ dataRouter.post("/", async (req, res, next) => {
         }
 
         let dbFile = new DbFile(name, uploadDate, hash, clientIp, availableUntil);
+        newFiles.push(dbFile);
 
         let dbResponse = await db.addFile(dbFile, currentFileName);
         if (!dbResponse.success)
@@ -68,7 +71,7 @@ dataRouter.post("/", async (req, res, next) => {
         sse.send(sseMessage, sseMessage.event);
         returnSuccess(res, newFiles);
     } else {
-        returnException(res, new HttpException(400, "not_file_submitted", "There was no file found in the request."))
+        returnException(res, new HttpException(400, "no_file_submitted", "There was no file found in the request."))
     }
 });
 

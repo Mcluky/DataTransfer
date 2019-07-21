@@ -27,11 +27,11 @@ export default class DbFile {
             this.id = id;
         } else {
             this.id = "";
-            this.id += uploadDate.toDateString() + ";";
-            this.id += (availableUntil ? availableUntil.toDateString() : "-") + ";";
+            this.id += uploadDate.valueOf() + ";";
+            this.id += (availableUntil ? availableUntil.valueOf() : "-") + ";";
             this.id += uploadedBy + ";";
             this.id += hash + ";";
-            this.id += name + ";";
+            this.id += name;
         }
 
         if (fileName) {

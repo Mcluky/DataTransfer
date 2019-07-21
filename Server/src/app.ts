@@ -16,7 +16,6 @@ import {returnException} from "./response/response";
 
 const server = express();
 server.use(express.static(path.join(__dirname, '..', 'static')));
-server.use(logger('dev'));
 
 //todo dockerize
 let db: IDatabase = new FileDatabase();
@@ -39,6 +38,18 @@ server.use(formidableMiddleware({
 server.use(express.json());
 server.use(express.urlencoded({extended: false}));
 server.use(cookieParser());
+server.use(logger('dev'));
+
+
+if(process.env.BUILD_STAGE == "DEVELOPMENT") {
+//This is required to work with local instance of client js
+    server.use(function (req, res, next) {
+        res.header("Access-Control-Allow-Origin", "http://localhost:5000"); // update to match the domain you will make the request from
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    });
+}
+
 
 server.use("/", generalRouter);
 

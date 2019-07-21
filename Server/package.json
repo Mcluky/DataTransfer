@@ -1,5 +1,5 @@
 {
-  "name": "data-transfer",
+  "name": "data-transfer-server",
   "version": "1.0.0",
   "description": "A application to easily transfer any data from device to device",
   "main": "build/app.js",

@@ -1,6 +1,11 @@
-import App from './components/App.svelte';
-import './styles.css';
+import App from './App.svelte';
+import 'bulma/css/bulma.css'
 
 const app = new App({
-  target: document.querySelector('main')
+	target: document.body,
+	props: {
+		name: 'world'
+	}
 });
+
+export default app;
