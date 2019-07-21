@@ -9,15 +9,10 @@ export function getAllFiles() {
         request.open('GET', url);
         request.send();
 
-        request.onreadystatechange  = function (){
+        request.onreadystatechange = function () {
             if (request.readyState === 4) {
-                let response = JSON.parse(request.responseText);
-                console.debug("Received http response:", response);
-                if (request.status >= 200 && request.status < 300) {
-                    resolve(response);
-                } else {
-                    reject(response);
-                }
+                console.debug("Received http response:", request);
+                returnPromise(request, resolve, reject);
             }
         }
     });
@@ -32,15 +27,10 @@ export function getFile(id) {
         request.open('GET', url);
         request.send();
 
-        request.onreadystatechange  = function (){
+        request.onreadystatechange = function () {
             if (request.readyState === 4) {
-                let response = JSON.parse(request.responseText);
-                console.debug("Received http response:", response);
-                if (request.status >= 200 && request.status < 300) {
-                    resolve(response);
-                } else {
-                    reject(response);
-                }
+                console.debug("Received http response:", request);
+                returnPromise(request, resolve, reject);
             }
         }
     });
@@ -54,15 +44,10 @@ export function deleteFile(id) {
         let request = new XMLHttpRequest();
         request.open('DELETE', url);
 
-        request.onreadystatechange  = function (){
+        request.onreadystatechange = function () {
             if (request.readyState === 4) {
-                let response = JSON.parse(request.responseText);
                 console.debug("Received http response:", response);
-                if (request.status >= 200 && request.status < 300) {
-                    resolve(response);
-                } else {
-                    reject(response);
-                }
+                returnPromise(request, resolve, reject);
             }
         };
 
@@ -71,7 +56,7 @@ export function deleteFile(id) {
 }
 
 export function ajaxFileUpload(files, availableForever, availableUntil) {
-    if(files.length === 0) {
+    if (files.length === 0) {
         console.debug("No files submitted");
         return null;
     }
@@ -90,32 +75,11 @@ export function ajaxFileUpload(files, availableForever, availableUntil) {
         //formData.append('text', text.value);
 
         let request = new XMLHttpRequest();
-        //todo can be removed
-        request.onprogress = function (e) {
-            console.debug("in progress")
-        };
-
-        request.onload = function (e) {
-            console.debug("on load")
-        };
-
-        request.onerror = function (e) {
-            console.debug("on error")
-        };
-
-        request.upload.onprogress = function (e) {
-            console.debug("upload in progress")
-        };
 
         request.onreadystatechange = function (e) {
             if (request.readyState === 4) {
                 console.debug("Received http response:", request.response);
-                let response = request.response;
-                if (request.status >= 200 && request.status < 300) {
-                    resolve(response);
-                } else {
-                    reject(response);
-                }
+                returnPromise(request, resolve, reject, true);
             }
         };
 
@@ -124,4 +88,22 @@ export function ajaxFileUpload(files, availableForever, availableUntil) {
         request.open("POST", url);
         request.send(formData);
     });
+}
+
+function returnPromise(request, resolve, reject, skipParse) {
+    if (request.status >= 200 && request.status < 300 || request.status === 304) {
+        let response = skipParse ? request.response : JSON.parse(request.responseText);
+        if (response.success) {
+            resolve(response);
+        } else {
+            reject(response)
+        }
+    } else {
+        try {
+            let response = request.response;
+            reject(response);
+        } catch (e) {
+            reject(request);
+        }
+    }
 }

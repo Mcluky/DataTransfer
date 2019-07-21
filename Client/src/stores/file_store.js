@@ -1,15 +1,32 @@
-import { readable } from 'svelte/store';
+import {writable, readable} from 'svelte/store';
 import {originUrl} from "../config";
+import {getAllFiles} from "../http/communicator";
 
-let files = [];
+export const fileStore = readable([], set => {
+    //Initial files
+    let getAllFilesPromise = getAllFiles();
+    getAllFilesPromise.then(value => {
+        if (value.data){
+            let initialDataEvent = {data: value.data};
+            initialDataEvent.event = "INITIAL_FILES";
+            set(initialDataEvent);
+        }
+    }).catch(reason => {
+        //todo error
+        console.error("initial files", reason);
+    });
 
-export const filesStore = readable([], set => {
+
     const fileEvtSource = new EventSource(originUrl + '/api/data/sse-updates');
 
-    fileEvtSource.onmessage = eventMessage => {
-        console.debug("received event message");
-        console.debug(eventMessage);
+    fileEvtSource.onmessage = (eventMessage) => {
+        console.debug("received event message", eventMessage);
+        set(JSON.parse(eventMessage.data));
+    };
 
+    return function stop() {
+        getAllFilesPromise.abort();
+        fileEvtSource.close()
     }
 });
 

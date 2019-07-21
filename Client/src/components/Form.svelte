@@ -1,5 +1,5 @@
 <script>
-    import {Field, Input, Icon, Switch, Button, Toast} from 'svelma'
+    import {Field, Input, Icon, Switch, Button } from 'svelma'
     import {ajaxFileUpload} from "../http/communicator"
     import {toastStore, ToastStoreData} from "../stores/toast_store";
 
@@ -28,21 +28,25 @@
 
     function onClickSave(event) {
         console.debug("onClickSave");
+        //use current time
+        metaFile.availableUntil = new Date().setHours(new Date().getHours() + metaFile.availableForHours);
         // todo change this if text is added
         if (inputFiles.length === 0) {
             toastStore.update(tsd => new ToastStoreData('You must at least select one file.', 'is-danger', 'is-top'))
             return
         }
-
         if (!loading) {
             loading = true;
             console.debug("starting upload...");
             ajaxFileUpload(inputFiles, metaFile.availableForever, metaFile.availableUntil)
                     .then(value => {
                         loading = false;
+                        inputFiles = [];
                     }).catch(reason => {
-                //todo do something meaningful
-            });
+                        console.error(reason);
+                        //todo do something meaningful
+                    }
+            );
         } else {
             toastStore.update(tsd => new ToastStoreData('Upload is already in progress, please wait until its finished.', 'is-danger', 'is-top'))
         }
@@ -52,10 +56,6 @@
 </script>
 
 <style>
-    h1 {
-        color: purple;
-    }
-
     #save-button-container {
         display: flex;
         flex-direction: row;

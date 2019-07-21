@@ -159,3 +159,5 @@ fabric.properties
 build/**/*
 
 package-lock.json
+
+files/**/*

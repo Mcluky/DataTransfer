@@ -51,11 +51,12 @@ dataRouter.post("/", async (req, res, next) => {
         let hash = req.files[fileKey].path.replace(/^.*[\\\/]/, '').split("_")[1];
         let uploadDate = new Date();
         let availableUntil: Date;
-        if (req.fields.availableForever) {
+        console.log(req.fields);
+        if (req.fields.availableForever === 'true') {
             availableUntil = null;
         } else {
             // @ts-ignore
-            availableUntil = req.fields.availableUntil ? new Date(req.fields.availableUntil) : new Date().setHours(new Date().getHours() + process.env.DEFAULT_AVAILABLE_TIME_MIN);
+            availableUntil = req.fields.availableUntil ? new Date(parseInt(req.fields.availableUntil)) : new Date().setHours(new Date().getHours() + process.env.DEFAULT_AVAILABLE_TIME_MIN);
         }
 
         let dbFile = new DbFile(name, uploadDate, hash, clientIp, availableUntil);
@@ -68,7 +69,7 @@ dataRouter.post("/", async (req, res, next) => {
 
     if (newFiles.length > 0) {
         let sseMessage = new SSEMessage(SSEEvent.NewFiles, newFiles);
-        sse.send(sseMessage, sseMessage.event);
+        sse.send(sseMessage);
         returnSuccess(res, newFiles);
     } else {
         returnException(res, new HttpException(400, "no_file_submitted", "There was no file found in the request."))

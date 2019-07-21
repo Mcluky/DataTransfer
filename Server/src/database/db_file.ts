@@ -46,8 +46,8 @@ export default class DbFile {
         let parts = id.split(";");
         if(parts.length != 5)
             return null;
-        let uploadDate = new Date(parts[0]);
-        let availableUntil = parts[1] != "-" ? new Date(parts[1]) : null;
+        let uploadDate = new Date(parseInt(parts[0]));
+        let availableUntil = parts[1] != "-" ? new Date(parseInt(parts[1])) : null;
         let uploadedBy = parts[2];
         let hash = parts[3];
         let name = parts[4];
