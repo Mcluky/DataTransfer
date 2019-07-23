@@ -4,8 +4,9 @@
     import FileWindow from "./components/FileWindow.svelte";
     import {Toast} from 'svelma'
     import {toastStore} from "./stores/toast_store";
+    import {afterUpdate} from 'svelte';
+    import {dndStore} from "./stores/dnd_store";
 
-    export let name;
 
     //todo fix where it is displayed
     const unsubscribeToastStore = toastStore.subscribe(value => {
@@ -15,6 +16,37 @@
                 type: value.type,
                 position: value.position
             });
+    });
+
+    //dropdown enabling
+    let dropZone;
+
+
+    function handleDragOver(event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    function handleDrop(event) {
+        if (event.dataTransfer.items) {
+            let files = [];
+            for (let i = 0; i < event.dataTransfer.items.length; i++) {
+                if (event.dataTransfer.items[i].kind === 'file') {
+                    let file = event.dataTransfer.items[i].getAsFile();
+                    files.push(file);
+                }
+            }
+            if (files.length > 0) {
+                event.preventDefault();
+                event.stopPropagation();
+                dndStore.update(value => files);
+            }
+        }
+    }
+
+    afterUpdate(() => {
+        dropZone.addEventListener('dragover', handleDragOver, false);
+        dropZone.addEventListener('drop', handleDrop, false);
     });
 </script>
 
@@ -48,9 +80,11 @@
     }
 </style>
 
-<div id="parentContainer">
-    <div class="flexBox">
-        <FileWindow/>
-        <Form/>
+<div bind:this={dropZone}>
+    <div id="parentContainer">
+        <div class="flexBox">
+            <FileWindow/>
+            <Form/>
+        </div>
     </div>
 </div>

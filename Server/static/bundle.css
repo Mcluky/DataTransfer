@@ -1,4 +1,6 @@
-h1.svelte-o015nm{color:purple}
+.flexBox.svelte-14hv71f{width:100%;display:flex;flex-direction:column}@media(min-width: 960px){.flexBox.svelte-14hv71f{display:flex;flex-direction:column;width:960px}}@media(min-width: 960px){#parentContainer.svelte-14hv71f{width:100%;display:flex;justify-content:center}}@media(max-width: 960px){#parentContainer.svelte-14hv71f{width:100%}}
 #save-button-container.svelte-1udev2g{display:flex;flex-direction:row;justify-content:flex-end}.button.svelte-1udev2g{text-decoration:none}.ripple.svelte-1udev2g{background-position:center;transition:background 0.8s}.ripple.svelte-1udev2g:hover{background:#23d160 radial-gradient(circle, transparent 1%, #23D160 1%) center/15000%}.ripple.svelte-1udev2g:active{background-color:#23D160;background-size:100%;transition:background 0s}
+#innerWindow.svelte-uqubrp{height:55vh;overflow-y:scroll;padding:10px;scroll-behavior:smooth}
+.file-icon.svelte-1sd8t75{margin:10px;font-size:40px}@media(max-width: 960px){.file-icon.svelte-1sd8t75{margin-top:10px;margin-right:0px;font-size:10vw}}
 
 /*# sourceMappingURL=bundle.css.map */

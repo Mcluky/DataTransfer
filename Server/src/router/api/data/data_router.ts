@@ -58,14 +58,19 @@ dataRouter.post("/", async (req, res, next) => {
         } else {
             // @ts-ignore
             availableUntil = req.fields.availableUntil ? new Date(parseInt(req.fields.availableUntil)) : new Date().setHours(new Date().getHours() + process.env.DEFAULT_AVAILABLE_TIME_MIN);
+
+            //schedule delete all
+            setTimeout(() => db.deleteAllRunOut(), availableUntil.valueOf() - Date.now() + 5000);
         }
 
         let dbFile = new DbFile(name, uploadDate, hash, uploadedBy, availableUntil);
-        newFiles.push(dbFile);
 
         let dbResponse = await db.addFile(dbFile, currentFileName);
-        if (!dbResponse.success)
+        if (!dbResponse.success) {
             returnException(res, HttpException.fromDbResponse(dbResponse));
+            return;
+        }
+        newFiles.push(dbFile);
     }
 
     if (newFiles.length > 0) {

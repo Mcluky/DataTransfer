@@ -8,16 +8,15 @@
     $: fromThisId = (id) => id === localId;
 
     let files = [];
+    let scrollDiv;
 
     const unsubscribeFilesArrayStore = filesArrayStore.subscribe(value => {
-        setTimeout(scrollToBottom, 500);
-        //innerWindow.scrollTop = innerWindow.scrollHeight;
+        setTimeout(scrollToBottom, 250);
         files = value;
     });
 
     function scrollToBottom(){
-        let innerWindow = document.getElementById("innerWindow");
-        innerWindow.scrollTop = innerWindow.scrollHeight ;
+        scrollDiv.scrollTo(0, scrollDiv.scrollHeight);
     }
 </script>
 
@@ -30,9 +29,9 @@
     }
 </style>
 
-<div class="section" style="margin-top: -25px">
+<div class="section" style="margin-top: -15px">
     <div class="box">
-        <div class="container" id="innerWindow"  >
+        <div class="container" id="innerWindow" bind:this={scrollDiv} >
             {#each files as file, i}
                 <File file={file} fromThisId={fromThisId(file.uploadedBy)}/>
             {:else}

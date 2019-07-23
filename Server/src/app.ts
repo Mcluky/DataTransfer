@@ -31,7 +31,6 @@ server.use(formidableMiddleware({
     encoding: 'utf-8',
     uploadDir: db.filesDir,
     multiples: true, // req.files to be arrays of files
-    maxFileSize: 1024 * 1024 * parseInt(process.env.MAX_FILE_SIZE_MB),
     hash: "md5"
 }));
 

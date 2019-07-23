@@ -1,7 +1,12 @@
 import IDatabase from "./i_database";
 import DbFile from "./db_file";
 import path from "path";
-import DbResponse, {couldNotBeParsedResponse, fileNotFoundResponse} from "./db_response";
+import DbResponse, {
+    couldNotBeParsedResponse,
+    fileNotFoundResponse,
+    fileToBigResponse,
+    storageFullResponse
+} from "./db_response";
 import fs from "fs";
 import getFolderSize from "get-folder-size";
 import SSEMessage, {SSEEvent} from "../response/sse_message";
@@ -31,14 +36,24 @@ export default class FileDatabase implements IDatabase {
             if (dbResponse.data === false)
                 return fileNotFoundResponse;
 
+            //check if file is not to big
+            let stats = fs.statSync(path.join(this.filesDir, currentFileName));
+            let fileSizeInMegabytes = stats.size / 1000000.0;
+            if ( fileSizeInMegabytes > parseInt(process.env.MAX_FILE_SIZE_MB)) {
+                //delete file if so
+                fs.unlinkSync(path.join(this.filesDir, currentFileName));
+                return fileToBigResponse;
+            }
 
             //check if file limit is reached
             dbResponse = await this.fileLimitReached(true);
             if (!dbResponse.success)
                 return dbResponse;
-            if (dbResponse.data)
-            //delete file if so
-                fs.unlinkSync(currentFileName);
+            if (dbResponse.data) {
+                //delete file if so
+                fs.unlinkSync(path.join(this.filesDir, currentFileName));
+                return storageFullResponse;
+            }
 
 
             fs.renameSync(path.join(this.filesDir, currentFileName), path.join(this.filesDir, dbFile.fileName))
@@ -52,7 +67,7 @@ export default class FileDatabase implements IDatabase {
     async deleteAllRunOut(): Promise<DbResponse<DbFile[] | any>> {
         console.log("Delete all run out");
         try {
-            let dbResponse = await this.getAllFiles(true);
+            let dbResponse = await new FileDatabase().getAllFiles(true);
             if (!dbResponse.success)
                 return dbResponse;
             let dbFiles: DbFile[] = dbResponse.data;

@@ -281,6 +281,68 @@ var app = (function () {
             block.o(local);
         }
     }
+    function create_in_transition(node, fn, params) {
+        let config = fn(node, params);
+        let running = false;
+        let animation_name;
+        let task;
+        let uid = 0;
+        function cleanup() {
+            if (animation_name)
+                delete_rule(node, animation_name);
+        }
+        function go() {
+            const { delay = 0, duration = 300, easing = identity, tick = noop, css } = config;
+            if (css)
+                animation_name = create_rule(node, 0, 1, duration, delay, easing, css, uid++);
+            tick(0, 1);
+            const start_time = now() + delay;
+            const end_time = start_time + duration;
+            if (task)
+                task.abort();
+            running = true;
+            add_render_callback(() => dispatch(node, true, 'start'));
+            task = loop(now => {
+                if (running) {
+                    if (now >= end_time) {
+                        tick(1, 0);
+                        dispatch(node, true, 'end');
+                        cleanup();
+                        return running = false;
+                    }
+                    if (now >= start_time) {
+                        const t = easing((now - start_time) / duration);
+                        tick(t, 1 - t);
+                    }
+                }
+                return running;
+            });
+        }
+        let started = false;
+        return {
+            start() {
+                if (started)
+                    return;
+                delete_rule(node);
+                if (is_function(config)) {
+                    config = config();
+                    wait().then(go);
+                }
+                else {
+                    go();
+                }
+            },
+            invalidate() {
+                started = false;
+            },
+            end() {
+                if (running) {
+                    cleanup();
+                    running = false;
+                }
+            }
+        };
+    }
     function create_bidirectional_transition(node, fn, params, intro) {
         let config = fn(node, params);
         let t = intro ? 0 : 1;
@@ -521,6 +583,27 @@ var app = (function () {
     //export const originUrl = window.location.origin;
     const originUrl = "http://localhost:5555";
 
+    let getLocalId = () => {
+        let localId = localStorage.getItem("localId");
+        if(!localId) {
+            localId = makeId(24);
+            localStorage.setItem("localId", localId);
+        }
+        return localId
+    };
+
+    function makeId(length) {
+        let text = "";
+        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for(let i=0; i < length; i++)
+        {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        return text;
+    }
+
     function getAllFiles() {
         const url = originUrl + '/api/data';
         console.debug("Requesting: (GET) ", url);
@@ -539,6 +622,25 @@ var app = (function () {
         });
     }
 
+    function deleteFile(id) {
+        const url = originUrl + '/api/data/' + id;
+        console.debug("Requesting: (DELETE) ", url);
+
+        return new Promise((resolve, reject) => {
+            let request = new XMLHttpRequest();
+            request.open('DELETE', url);
+
+            request.onreadystatechange = function () {
+                if (request.readyState === 4) {
+                    console.debug("Received http response:", request);
+                    returnPromise(request, resolve, reject);
+                }
+            };
+
+            request.send();
+        });
+    }
+
     function ajaxFileUpload(files, availableForever, availableUntil) {
         if (files.length === 0) {
             console.debug("No files submitted");
@@ -547,7 +649,8 @@ var app = (function () {
         const url = originUrl + '/api/data/';
         console.debug("Requesting: (POST) ", url);
 
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
+            let uploadedBy = await getLocalId();
 
             let formData = new FormData();
             for (let i = 0; i < files.length; i++)
@@ -555,6 +658,7 @@ var app = (function () {
 
             formData.append('availableForever', availableForever);
             formData.append('availableUntil', availableUntil);
+            formData.append('uploadedBy', uploadedBy);
             //todo maybe add text
             //formData.append('text', text.value);
 
@@ -822,7 +926,7 @@ var app = (function () {
     	};
     }
 
-    // (98:20) <Field label="Time of availability">
+    // (98:20) <Field label="Time of availability (hours)">
     function create_default_slot_2(ctx) {
     	var updating_value, current;
 
@@ -906,22 +1010,22 @@ var app = (function () {
     			attr(input, "class", "file-input");
     			attr(input, "type", "file");
     			input.multiple = true;
-    			add_location(input, file, 105, 32, 3536);
+    			add_location(input, file, 105, 32, 3590);
     			attr(i, "class", "fas fa-upload");
-    			add_location(i, file, 108, 40, 3768);
+    			add_location(i, file, 108, 40, 3822);
     			attr(span0, "class", "file-icon");
-    			add_location(span0, file, 107, 36, 3702);
+    			add_location(span0, file, 107, 36, 3756);
     			attr(span1, "class", "file-label");
-    			add_location(span1, file, 110, 36, 3880);
+    			add_location(span1, file, 110, 36, 3934);
     			attr(span2, "class", "file-cta");
-    			add_location(span2, file, 106, 32, 3641);
-    			attr(span3, "class", "file-name");
-    			set_style(span3, "width", "10000px");
-    			add_location(span3, file, 115, 32, 4170);
+    			add_location(span2, file, 106, 32, 3695);
+    			attr(span3, "class", "file-name ultra-width");
+    			set_style(span3, "width", "30vw");
+    			add_location(span3, file, 115, 32, 4224);
     			attr(label, "class", "file-label");
-    			add_location(label, file, 104, 28, 3476);
+    			add_location(label, file, 104, 28, 3530);
     			attr(div, "class", "file has-name");
-    			add_location(div, file, 103, 24, 3419);
+    			add_location(div, file, 103, 24, 3473);
     			dispose = listen(input, "input", ctx.input_input_handler);
     		},
 
@@ -966,9 +1070,9 @@ var app = (function () {
     			i = element("i");
     			t = text(" \r\n                                    Save");
     			attr(i, "class", "fas fa-check");
-    			add_location(i, file, 127, 91, 4858);
+    			add_location(i, file, 127, 91, 4921);
     			attr(a, "class", "button is-success ripple svelte-1udev2g");
-    			add_location(a, file, 127, 32, 4799);
+    			add_location(a, file, 127, 32, 4862);
     			dispose = listen(a, "click", ctx.onClickSave);
     		},
 
@@ -998,9 +1102,9 @@ var app = (function () {
     			i = element("i");
     			t = text("  Save");
     			attr(i, "class", "fas fa-check");
-    			add_location(i, file, 124, 102, 4645);
+    			add_location(i, file, 124, 102, 4708);
     			attr(a, "class", "button is-success ripple is-loading svelte-1udev2g");
-    			add_location(a, file, 124, 32, 4575);
+    			add_location(a, file, 124, 32, 4638);
     			dispose = listen(a, "click", ctx.onClickSave);
     		},
 
@@ -1038,7 +1142,7 @@ var app = (function () {
     			if_block.c();
     			attr(div, "id", "save-button-container");
     			attr(div, "class", "svelte-1udev2g");
-    			add_location(div, file, 122, 24, 4466);
+    			add_location(div, file, 122, 24, 4529);
     		},
 
     		m: function mount(target, anchor) {
@@ -1080,7 +1184,7 @@ var app = (function () {
 
     	var field1 = new rt({
     		props: {
-    		label: "Time of availability",
+    		label: "Time of availability (hours)",
     		$$slots: { default: [create_default_slot_2] },
     		$$scope: { ctx }
     	},
@@ -1118,14 +1222,16 @@ var app = (function () {
     			t2 = space();
     			field3.$$.fragment.c();
     			attr(div0, "class", "container");
-    			add_location(div0, file, 88, 16, 2619);
+    			add_location(div0, file, 88, 16, 2665);
     			attr(div1, "class", "box");
-    			add_location(div1, file, 87, 12, 2584);
-    			attr(div2, "class", "level-left");
-    			add_location(div2, file, 86, 8, 2546);
+    			add_location(div1, file, 87, 12, 2630);
+    			attr(div2, "class", "level-item");
+    			add_location(div2, file, 86, 8, 2592);
     			attr(div3, "class", "level");
-    			add_location(div3, file, 85, 4, 2517);
+    			add_location(div3, file, 85, 4, 2563);
     			attr(div4, "class", "section");
+    			set_style(div4, "margin-top", "-60px");
+    			set_style(div4, "margin-bottom", "0px");
     			add_location(div4, file, 84, 0, 2490);
     		},
 
@@ -1330,16 +1436,37 @@ var app = (function () {
                 if($fileStore.event.toUpperCase() === "NEW_FILES" || $fileStore.event.toUpperCase() === "INITIAL_FILES"){
                     files = files.concat($fileStore.data);
                 }
+                if($fileStore.event.toUpperCase() === "FILES_DELETED"){
+                    removeArrayItems($fileStore.data);
+                }
             }
             return files;
         }
     );
+
+    function removeArrayItems(filesToDelete) {
+        for(let i = files.length - 1; i >= 0 ; i--){
+            let file = files[i];
+            for(let fileToDelete of filesToDelete){
+                if(file.id === fileToDelete.id){                files.splice(i, 1);
+                }
+            }
+        }
+    }
 
     function cubicOut(t) {
         const f = t - 1.0;
         return f * f * f + 1.0;
     }
 
+    function fade(node, { delay = 0, duration = 400 }) {
+        const o = +getComputedStyle(node).opacity;
+        return {
+            delay,
+            duration,
+            css: t => `opacity: ${t * o}`
+        };
+    }
     function slide(node, { delay = 0, duration = 400, easing = cubicOut }) {
         const style = getComputedStyle(node);
         const opacity = +style.opacity;
@@ -1450,7 +1577,7 @@ var app = (function () {
 
     const file_1 = "src\\components\\File.svelte";
 
-    // (30:20) {:else}
+    // (50:20) {:else}
     function create_else_block$1(ctx) {
     	var strong;
 
@@ -1458,7 +1585,7 @@ var app = (function () {
     		c: function create() {
     			strong = element("strong");
     			strong.textContent = "Available\r\n                            forever";
-    			add_location(strong, file_1, 30, 24, 1169);
+    			add_location(strong, file_1, 50, 24, 1639);
     		},
 
     		m: function mount(target, anchor) {
@@ -1475,7 +1602,7 @@ var app = (function () {
     	};
     }
 
-    // (27:20) {#if file.availableUntil}
+    // (47:20) {#if file.availableUntil}
     function create_if_block$1(ctx) {
     	var strong, t1, t2_value = new Date(ctx.file.uploadDate).toLocaleString(), t2;
 
@@ -1485,7 +1612,7 @@ var app = (function () {
     			strong.textContent = "Available\r\n                            until";
     			t1 = space();
     			t2 = text(t2_value);
-    			add_location(strong, file_1, 27, 24, 1008);
+    			add_location(strong, file_1, 47, 24, 1478);
     		},
 
     		m: function mount(target, anchor) {
@@ -1511,7 +1638,7 @@ var app = (function () {
     }
 
     function create_fragment$1(ctx) {
-    	var div3, article, div0, i, t0, div2, div1, p, strong0, a, t1_value = ctx.file.name, t1, t2, br, t3, strong1, t5, t6_value = new Date(ctx.file.uploadDate).toLocaleString(), t6, t7, div3_transition, current;
+    	var div4, article, div0, i0, t0, div3, div1, p, strong0, a0, t1_value = ctx.file.name, t1, t2, br, t3, strong1, t5, t6_value = new Date(ctx.file.uploadDate).toLocaleString(), t6, t7, t8, nav, div2, a1, span0, i1, t9, a2, span1, i2, t10, a3, span2, i3, nav_transition, div4_intro, current, dispose;
 
     	function select_block_type(ctx) {
     		if (ctx.file.availableUntil) return create_if_block$1;
@@ -1523,16 +1650,16 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			div3 = element("div");
+    			div4 = element("div");
     			article = element("article");
     			div0 = element("div");
-    			i = element("i");
+    			i0 = element("i");
     			t0 = space();
-    			div2 = element("div");
+    			div3 = element("div");
     			div1 = element("div");
     			p = element("p");
     			strong0 = element("strong");
-    			a = element("a");
+    			a0 = element("a");
     			t1 = text(t1_value);
     			t2 = space();
     			br = element("br");
@@ -1543,25 +1670,65 @@ var app = (function () {
     			t6 = text(t6_value);
     			t7 = text(" -\r\n                    ");
     			if_block.c();
-    			attr(i, "class", ctx.fileIcon);
-    			add_location(i, file_1, 18, 12, 606);
+    			t8 = space();
+    			nav = element("nav");
+    			div2 = element("div");
+    			a1 = element("a");
+    			span0 = element("span");
+    			i1 = element("i");
+    			t9 = space();
+    			a2 = element("a");
+    			span1 = element("span");
+    			i2 = element("i");
+    			t10 = space();
+    			a3 = element("a");
+    			span2 = element("span");
+    			i3 = element("i");
+    			attr(i0, "class", "" + ctx.fileIcon + " svelte-1sd8t75");
+    			add_location(i0, file_1, 38, 12, 1076);
     			attr(div0, "class", "media-left");
-    			add_location(div0, file_1, 17, 8, 568);
-    			attr(a, "href", ctx.fileUrl);
-    			add_location(a, file_1, 23, 28, 769);
-    			add_location(strong0, file_1, 23, 20, 761);
-    			add_location(br, file_1, 24, 20, 833);
-    			add_location(strong1, file_1, 25, 20, 860);
-    			add_location(p, file_1, 22, 16, 736);
+    			add_location(div0, file_1, 37, 8, 1038);
+    			attr(a0, "href", ctx.fileUrl);
+    			add_location(a0, file_1, 43, 28, 1239);
+    			add_location(strong0, file_1, 43, 20, 1231);
+    			add_location(br, file_1, 44, 20, 1303);
+    			add_location(strong1, file_1, 45, 20, 1330);
+    			add_location(p, file_1, 42, 16, 1206);
     			attr(div1, "class", "content");
-    			add_location(div1, file_1, 21, 12, 697);
-    			attr(div2, "class", "media-content");
-    			add_location(div2, file_1, 20, 8, 656);
+    			add_location(div1, file_1, 41, 12, 1167);
+    			attr(i1, "class", "fas fa-trash");
+    			add_location(i1, file_1, 59, 28, 2041);
+    			attr(span0, "class", "icon is-small");
+    			add_location(span0, file_1, 58, 24, 1983);
+    			attr(a1, "class", "level-item");
+    			attr(a1, "aria-label", "trash");
+    			add_location(a1, file_1, 57, 20, 1894);
+    			attr(i2, "class", "fas fa-info-circle");
+    			add_location(i2, file_1, 64, 28, 2274);
+    			attr(span1, "class", "icon is-small");
+    			add_location(span1, file_1, 63, 24, 2216);
+    			attr(a2, "class", "level-item");
+    			attr(a2, "aria-label", "info");
+    			add_location(a2, file_1, 62, 20, 2150);
+    			attr(i3, "class", "fas fa-share-alt");
+    			add_location(i3, file_1, 69, 28, 2514);
+    			attr(span2, "class", "icon is-small");
+    			add_location(span2, file_1, 68, 24, 2456);
+    			attr(a3, "class", "level-item");
+    			attr(a3, "aria-label", "share");
+    			add_location(a3, file_1, 67, 20, 2389);
+    			attr(div2, "class", "level-left");
+    			add_location(div2, file_1, 56, 16, 1848);
+    			attr(nav, "class", "level is-mobile");
+    			add_location(nav, file_1, 55, 12, 1785);
+    			attr(div3, "class", "media-content");
+    			add_location(div3, file_1, 40, 8, 1126);
     			attr(article, "class", "media");
-    			add_location(article, file_1, 16, 4, 535);
-    			attr(div3, "class", "box");
-    			set_style(div3, "background-color", (ctx.fromThisIp ? '#23d160' : 'white'));
-    			add_location(div3, file_1, 15, 0, 411);
+    			add_location(article, file_1, 36, 4, 1005);
+    			attr(div4, "class", "box");
+    			set_style(div4, "background-color", (ctx.fromThisId ? '#23d160' : 'white'));
+    			add_location(div4, file_1, 35, 0, 889);
+    			dispose = listen(a1, "click", ctx.removeFile);
     		},
 
     		l: function claim(nodes) {
@@ -1569,17 +1736,17 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div3, anchor);
-    			append(div3, article);
+    			insert(target, div4, anchor);
+    			append(div4, article);
     			append(article, div0);
-    			append(div0, i);
+    			append(div0, i0);
     			append(article, t0);
-    			append(article, div2);
-    			append(div2, div1);
+    			append(article, div3);
+    			append(div3, div1);
     			append(div1, p);
     			append(p, strong0);
-    			append(strong0, a);
-    			append(a, t1);
+    			append(strong0, a0);
+    			append(a0, t1);
     			append(p, t2);
     			append(p, br);
     			append(p, t3);
@@ -1588,12 +1755,26 @@ var app = (function () {
     			append(p, t6);
     			append(p, t7);
     			if_block.m(p, null);
+    			append(div3, t8);
+    			append(div3, nav);
+    			append(nav, div2);
+    			append(div2, a1);
+    			append(a1, span0);
+    			append(span0, i1);
+    			append(div2, t9);
+    			append(div2, a2);
+    			append(a2, span1);
+    			append(span1, i2);
+    			append(div2, t10);
+    			append(div2, a3);
+    			append(a3, span2);
+    			append(span2, i3);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
     			if (!current || changed.fileIcon) {
-    				attr(i, "class", ctx.fileIcon);
+    				attr(i0, "class", "" + ctx.fileIcon + " svelte-1sd8t75");
     			}
 
     			if ((!current || changed.file) && t1_value !== (t1_value = ctx.file.name)) {
@@ -1601,7 +1782,7 @@ var app = (function () {
     			}
 
     			if (!current || changed.fileUrl) {
-    				attr(a, "href", ctx.fileUrl);
+    				attr(a0, "href", ctx.fileUrl);
     			}
 
     			if ((!current || changed.file) && t6_value !== (t6_value = new Date(ctx.file.uploadDate).toLocaleString())) {
@@ -1619,38 +1800,47 @@ var app = (function () {
     				}
     			}
 
-    			if (!current || changed.fromThisIp) {
-    				set_style(div3, "background-color", (ctx.fromThisIp ? '#23d160' : 'white'));
+    			if (!current || changed.fromThisId) {
+    				set_style(div4, "background-color", (ctx.fromThisId ? '#23d160' : 'white'));
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
     			add_render_callback(() => {
-    				if (!div3_transition) div3_transition = create_bidirectional_transition(div3, slide, {duration: 500 }, true);
-    				div3_transition.run(1);
+    				if (!nav_transition) nav_transition = create_bidirectional_transition(nav, fade, {}, true);
+    				nav_transition.run(1);
     			});
+
+    			if (!div4_intro) {
+    				add_render_callback(() => {
+    					div4_intro = create_in_transition(div4, slide, {duration: 500 });
+    					div4_intro.start();
+    				});
+    			}
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			if (!div3_transition) div3_transition = create_bidirectional_transition(div3, slide, {duration: 500 }, false);
-    			div3_transition.run(0);
+    			if (!nav_transition) nav_transition = create_bidirectional_transition(nav, fade, {}, false);
+    			nav_transition.run(0);
 
     			current = false;
     		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div3);
+    				detach(div4);
     			}
 
     			if_block.d();
 
     			if (detaching) {
-    				if (div3_transition) div3_transition.end();
+    				if (nav_transition) nav_transition.end();
     			}
+
+    			dispose();
     		}
     	};
     }
@@ -1658,40 +1848,50 @@ var app = (function () {
     function instance$1($$self, $$props, $$invalidate) {
     	
 
-        let { file, fromThisIp } = $$props;
+        let { file, fromThisId } = $$props;
 
-    	const writable_props = ['file', 'fromThisIp'];
+        function removeFile() {
+            deleteFile(file.id);
+        }
+
+    	const writable_props = ['file', 'fromThisId'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<File> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$set = $$props => {
     		if ('file' in $$props) $$invalidate('file', file = $$props.file);
-    		if ('fromThisIp' in $$props) $$invalidate('fromThisIp', fromThisIp = $$props.fromThisIp);
+    		if ('fromThisId' in $$props) $$invalidate('fromThisId', fromThisId = $$props.fromThisId);
     	};
 
     	let fileUrl, fileIcon;
 
     	$$self.$$.update = ($$dirty = { file: 1 }) => {
     		if ($$dirty.file) { $$invalidate('fileUrl', fileUrl = originUrl + "/api/data/download/" + file.id); }
-    		if ($$dirty.file) { $$invalidate('fileIcon', fileIcon = "fa " + getClassNameForFilename(file.name) + " fa-3x"); }
+    		if ($$dirty.file) { $$invalidate('fileIcon', fileIcon = "fa " + getClassNameForFilename(file.name) + " file-icon"); }
     	};
 
-    	return { file, fromThisIp, fileUrl, fileIcon };
+    	return {
+    		file,
+    		fromThisId,
+    		removeFile,
+    		fileUrl,
+    		fileIcon
+    	};
     }
 
     class File extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["file", "fromThisIp"]);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["file", "fromThisId"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
     		if (ctx.file === undefined && !('file' in props)) {
     			console.warn("<File> was created without expected prop 'file'");
     		}
-    		if (ctx.fromThisIp === undefined && !('fromThisIp' in props)) {
-    			console.warn("<File> was created without expected prop 'fromThisIp'");
+    		if (ctx.fromThisId === undefined && !('fromThisId' in props)) {
+    			console.warn("<File> was created without expected prop 'fromThisId'");
     		}
     	}
 
@@ -1703,25 +1903,13 @@ var app = (function () {
     		throw new Error("<File>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get fromThisIp() {
+    	get fromThisId() {
     		throw new Error("<File>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set fromThisIp(value) {
+    	set fromThisId(value) {
     		throw new Error("<File>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
-    }
-
-    function getPublicIp() {
-        return new Promise((resolve, reject) => {
-            fetch('https://api.ipify.org?format=json')
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (myJson) {
-                    resolve(myJson.ip);
-                }).catch(reason => reject(reason));
-        });
     }
 
     /* src\components\FileWindow.svelte generated by Svelte v3.6.7 */
@@ -1735,37 +1923,51 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (31:12) {:else}
+    // (38:12) {:else}
     function create_else_block$2(ctx) {
-    	var p;
+    	var div, p, t1, a, t3;
 
     	return {
     		c: function create() {
+    			div = element("div");
     			p = element("p");
-    			p.textContent = "No Files";
-    			add_location(p, file$1, 31, 16, 799);
+    			p.textContent = "No Files yet";
+    			t1 = space();
+    			a = element("a");
+    			a.textContent = "-";
+    			t3 = space();
+    			add_location(p, file$1, 39, 20, 1205);
+    			attr(a, "class", "button is-loading");
+    			set_style(a, "border", "none");
+    			add_location(a, file$1, 40, 20, 1246);
+    			set_style(div, "text-align", "center");
+    			add_location(div, file$1, 38, 16, 1151);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, p, anchor);
+    			insert(target, div, anchor);
+    			append(div, p);
+    			append(div, t1);
+    			append(div, a);
+    			append(div, t3);
     		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(p);
+    				detach(div);
     			}
     		}
     	};
     }
 
-    // (29:12) {#each files as file, i}
+    // (36:12) {#each files as file, i}
     function create_each_block(ctx) {
     	var current;
 
     	var file_1 = new File({
     		props: {
     		file: ctx.file,
-    		fromThisIp: ctx.fromThisIp(ctx.file.uploadedBy)
+    		fromThisId: ctx.fromThisId(ctx.file.uploadedBy)
     	},
     		$$inline: true
     	});
@@ -1783,7 +1985,7 @@ var app = (function () {
     		p: function update(changed, ctx) {
     			var file_1_changes = {};
     			if (changed.files) file_1_changes.file = ctx.file;
-    			if (changed.fromThisIp || changed.files) file_1_changes.fromThisIp = ctx.fromThisIp(ctx.file.uploadedBy);
+    			if (changed.fromThisId || changed.files) file_1_changes.fromThisId = ctx.fromThisId(ctx.file.uploadedBy);
     			file_1.$set(file_1_changes);
     		},
 
@@ -1836,12 +2038,14 @@ var app = (function () {
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			attr(div0, "class", "container");
-    			add_location(div0, file$1, 27, 8, 621);
+    			attr(div0, "class", "container svelte-uqubrp");
+    			attr(div0, "id", "innerWindow");
+    			add_location(div0, file$1, 34, 8, 954);
     			attr(div1, "class", "box");
-    			add_location(div1, file$1, 26, 4, 593);
+    			add_location(div1, file$1, 33, 4, 927);
     			attr(div2, "class", "section");
-    			add_location(div2, file$1, 25, 0, 566);
+    			set_style(div2, "margin-top", "-25px");
+    			add_location(div2, file$1, 32, 0, 874);
     		},
 
     		l: function claim(nodes) {
@@ -1865,7 +2069,7 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.files || changed.fromThisIp) {
+    			if (changed.files || changed.fromThisId) {
     				each_value = ctx.files;
 
     				for (var i = 0; i < each_value.length; i += 1) {
@@ -1925,29 +2129,31 @@ var app = (function () {
     	};
     }
 
+    function scrollToBottom(){
+        let innerWindow = document.getElementById("innerWindow");
+        innerWindow.scrollTop = innerWindow.scrollHeight ;
+    }
+
     function instance$2($$self, $$props, $$invalidate) {
     	
 
-        let publicIp = 0;
-
-        getPublicIp().then(ip => {
-           $$invalidate('publicIp', publicIp = ip);
-        });
+        let localId = getLocalId();
 
         let files = [];
 
         const unsubscribeFilesArrayStore = filesArrayStore.subscribe(value => {
-            console.debug("files", files);
+            setTimeout(scrollToBottom, 500);
+            //innerWindow.scrollTop = innerWindow.scrollHeight;
             $$invalidate('files', files = value);
         });
 
-    	let fromThisIp;
+    	let fromThisId;
 
-    	$$self.$$.update = ($$dirty = { publicIp: 1 }) => {
-    		if ($$dirty.publicIp) { $$invalidate('fromThisIp', fromThisIp = (ip) => ip === publicIp); }
+    	$$self.$$.update = ($$dirty = { localId: 1 }) => {
+    		if ($$dirty.localId) { $$invalidate('fromThisId', fromThisId = (id) => id === localId); }
     	};
 
-    	return { files, fromThisIp };
+    	return { files, fromThisId };
     }
 
     class FileWindow extends SvelteComponentDev {
@@ -1962,7 +2168,7 @@ var app = (function () {
     const file$2 = "src\\App.svelte";
 
     function create_fragment$3(ctx) {
-    	var h1, t0, t1, t2, t3, t4, current;
+    	var div1, div0, t, current;
 
     	var filewindow = new FileWindow({ $$inline: true });
 
@@ -1970,15 +2176,16 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			h1 = element("h1");
-    			t0 = text("Hello ");
-    			t1 = text(ctx.name);
-    			t2 = text("!");
-    			t3 = space();
+    			div1 = element("div");
+    			div0 = element("div");
     			filewindow.$$.fragment.c();
-    			t4 = space();
+    			t = space();
     			form.$$.fragment.c();
-    			add_location(h1, file$2, 23, 0, 575);
+    			attr(div0, "class", "flexBox svelte-14hv71f");
+    			add_location(div0, file$2, 51, 4, 1126);
+    			attr(div1, "id", "parentContainer");
+    			attr(div1, "class", "svelte-14hv71f");
+    			add_location(div1, file$2, 50, 0, 1095);
     		},
 
     		l: function claim(nodes) {
@@ -1986,22 +2193,15 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, h1, anchor);
-    			append(h1, t0);
-    			append(h1, t1);
-    			append(h1, t2);
-    			insert(target, t3, anchor);
-    			mount_component(filewindow, target, anchor);
-    			insert(target, t4, anchor);
-    			mount_component(form, target, anchor);
+    			insert(target, div1, anchor);
+    			append(div1, div0);
+    			mount_component(filewindow, div0, null);
+    			append(div0, t);
+    			mount_component(form, div0, null);
     			current = true;
     		},
 
-    		p: function update(changed, ctx) {
-    			if (!current || changed.name) {
-    				set_data(t1, ctx.name);
-    			}
-    		},
+    		p: noop,
 
     		i: function intro(local) {
     			if (current) return;
@@ -2020,17 +2220,12 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(h1);
-    				detach(t3);
+    				detach(div1);
     			}
 
-    			destroy_component(filewindow, detaching);
+    			destroy_component(filewindow, );
 
-    			if (detaching) {
-    				detach(t4);
-    			}
-
-    			destroy_component(form, detaching);
+    			destroy_component(form, );
     		}
     	};
     }

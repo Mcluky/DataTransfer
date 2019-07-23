@@ -4,7 +4,6 @@
     import {toastStore, ToastStoreData} from "../stores/toast_store";
     import MdEditor from "./MdEditor.svelte"
     import {dndStore} from "../stores/dnd_store";
-    import ToolTip from "./ToolTip.svelte"
 
     let metaFile = {
         availableForever: false,
@@ -50,7 +49,7 @@
         }
     }
 
-    function onClickSave() {
+    function onClickSave(event) {
         // todo change this if text is added
         if (inputFiles.length === 0) {
             toastStore.update(tsd => new ToastStoreData('You must at least select one file.', 'is-danger', 'is-top'))
@@ -91,66 +90,29 @@
         background-size: 100%;
         transition: background 0s;
     }
-
-    .flexContainer {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap-reverse;
-        align-items: start;
-    }
-
-    .form {
-        width: 30%;
-        margin-right: 5%;
-        height: fit-content;
-    }
-
-    .editor {
-        width: 65%;
-    }
-
-    @media (max-width: 730px) {
-        .editor {
-            width: 100%;
-            margin-bottom: 30px;
-        }
-
-        .form {
-            width: 70%;
-            height: fit-content;
-        }
-    }
-
-    @media (max-width: 410px) {
-        .form {
-            width: 100%;
-            height: fit-content;
-        }
-    }
-
-
 </style>
 
 <div class="section" style="margin-top: -60px; margin-bottom: 0px">
-    <div class="flexContainer">
-        <div class="box form">
-            <div class="container">
-                <Field>
-                    <Switch size="is-small"
-                            bind:checked={metaFile.availableForever}>Available forever
-                    </Switch>
-                </Field>
-                <Field label="Time of availability (hours)">
-                    <Input disabled={disabledTimeOfAvailability} type="number"
-                           bind:value={metaFile.availableForHours}
-                           placeholder="Hours">_</Input>
-                </Field>
-
-                <Field>
-                        <div class="file has-name">
-                            <label class="file-label">
-                                <input class="file-input" type="file" multiple bind:files={inputFiles}>
-                                <span class="file-cta">
+    <div class="level">
+        <div class="level-left">
+            <div class="level-item">
+                <div class="box">
+                    <div class="container">
+                        <Field>
+                            <Switch size="is-small"
+                                    bind:checked={metaFile.availableForever}>Available forever
+                            </Switch>
+                        </Field>
+                        <Field label="Time of availability (hours)">
+                            <Input disabled={disabledTimeOfAvailability} type="number"
+                                   bind:value={metaFile.availableForHours}
+                                   placeholder="Hours">_</Input>
+                        </Field>
+                        <Field>
+                            <div class="file has-name">
+                                <label class="file-label">
+                                    <input class="file-input" type="file" multiple bind:files={inputFiles}>
+                                    <span class="file-cta">
                                     <span class="file-icon">
                                         <i class="fas fa-upload"></i>
                                     </span>
@@ -159,31 +121,35 @@
                                     </span>
                                 </span>
                                 <!-- set this to high on purpose so it looks better-->
-                                <span class="file-name" style="width: 30vw">
+                                    <span class="file-name" style="width: 30vw">
                                     {filesString()}
                                 </span>
-                            </label>
-                        </div>
-                </Field>
-                <small style="font-size: smaller">(You can also just drop your files anywhere on the page.)</small>
-                <Field>
-                    <div id="save-button-container">
-                        {#if loading}
-                            <a class="button is-success ripple is-loading" on:click={onClickSave}><i
-                                    class="fas fa-check"></i>&nbsp Save</a>
-                        {:else}
-                            <a class="button is-success ripple" on:click={onClickSave}><i
-                                    class="fas fa-check"></i>&nbsp
-                                Save</a>
-                        {/if}
+                                </label>
+                            </div>
+                        </Field>
+                        <Field>
+                            <div id="save-button-container">
+                                {#if loading}
+                                    <a class="button is-success ripple is-loading" on:click={onClickSave}><i
+                                            class="fas fa-check"></i>&nbsp Save</a>
+                                {:else}
+                                    <a class="button is-success ripple" on:click={onClickSave}><i
+                                            class="fas fa-check"></i>&nbsp
+                                        Save</a>
+                                {/if}
+                            </div>
+                        </Field>
                     </div>
-                </Field>
+                </div>
             </div>
         </div>
-        <div class="box editor">
-            <div class="container">
-                <MdEditor loading={loading}/>
-
+        <div class="level-right">
+            <div class="level-item">
+                <div class="box">
+                    <div class="container">
+                        <MdEditor />
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,4 +1,9 @@
-import DbResponse, {couldNotBeParsedResponse, fileNotFoundResponse, storageFullResponse} from "../database/db_response";
+import DbResponse, {
+    couldNotBeParsedResponse,
+    fileNotFoundResponse,
+    fileToBigResponse,
+    storageFullResponse
+} from "../database/db_response";
 
 export default class HttpException {
     public statusCode: number;
@@ -27,6 +32,8 @@ export default class HttpException {
             case couldNotBeParsedResponse.error:
                 return couldNotBeParsedException;
 
+            case fileToBigResponse.error:
+                return fileToBiglException;
             default:
                 //todo might be a security issue
                 return new HttpException(500, dbResponse.error, dbResponse.msg);
@@ -38,3 +45,4 @@ export const couldNotBeParsedException = new HttpException(406, "id_could_not_be
 export const fileNotFoundException = new HttpException(404, "file_not_found", "The requested file either does not exist or is not available anymore.")
 export const pageNotFoundException = new HttpException(404, "page_not_found", "The requested page was not found.");
 export const storageFullException = new HttpException(507, "storage_full", "The allocated storage is full and not able to store more files.");
+export const fileToBiglException = new HttpException(507, "file_to_large", "The file is larger than in the options allowed.");
