@@ -8,7 +8,6 @@
 
     let metaFile = {
         availableForever: false,
-        availableUntil: new Date(),
         availableForHours: 1.0
     };
 
@@ -33,9 +32,9 @@
         if (!loading) {
             loading = true;
             //use current time
-            metaFile.availableUntil = new Date(Date.now() + (metaFile.availableForHours * 60 * 60 * 1000)).valueOf();
+            let availableUntil = new Date(Date.now() + (metaFile.availableForHours * 60 * 60 * 1000)).valueOf();
             console.debug("starting upload...");
-            ajaxFileUpload(files, metaFile.availableForever, metaFile.availableUntil)
+            ajaxFileUpload(files, metaFile.availableForever, availableUntil)
                     .then(value => {
                         loading = false;
                         inputFiles = [];
@@ -182,8 +181,7 @@
         </div>
         <div class="box editor">
             <div class="container">
-                <MdEditor loading={loading}/>
-
+                <MdEditor loading={loading} availableForever={metaFile.availableForever} availableForHours={metaFile.availableForHours} />
             </div>
         </div>
     </div>

@@ -60,7 +60,7 @@ dataRouter.post("/", async (req, res, next) => {
             availableUntil = req.fields.availableUntil ? new Date(parseInt(req.fields.availableUntil)) : new Date().setHours(new Date().getHours() + process.env.DEFAULT_AVAILABLE_TIME_MIN);
 
             //schedule delete all
-            setTimeout(() => db.deleteAllRunOut(), availableUntil.valueOf() - Date.now() + 5000);
+            setTimeout(() => db.deleteAllRunOut(), availableUntil.valueOf() - Date.now() + 1000);
         }
 
         let dbFile = new DbFile(name, uploadDate, hash, uploadedBy, availableUntil);
@@ -106,7 +106,26 @@ dataRouter.get("/download/:id", async (req, res, next) => {
     }
     if ((await db.fileExists(dbFile.fileName)).data) {
         console.log("starting download...");
+        //res.sendFile(path.join(db.filesDir, dbFile.fileName), dbFile.name, err => console.error(err));
         res.download(path.join(db.filesDir, dbFile.fileName), dbFile.name, err => console.error(err));
+    } else {
+        //todo make a nice looking html page
+        returnException(res, fileNotFoundException)
+    }
+});
+
+dataRouter.get("/see/:id", async (req, res, next) => {
+    let fileId = req.params.id;
+    let dbFile = DbFile.fromId(fileId);
+    if (!dbFile) {
+        //file could most likely not be parsed
+        console.error("File could most likely not be parsed");
+        returnException(res, couldNotBeParsedException)
+    }
+    if ((await db.fileExists(dbFile.fileName)).data) {
+        console.log("starting download...");
+        res.sendFile(path.join(db.filesDir, dbFile.fileName), dbFile.name, err => console.error(err));
+        //res.download(path.join(db.filesDir, dbFile.fileName), dbFile.name, err => console.error(err));
     } else {
         //todo make a nice looking html page
         returnException(res, fileNotFoundException)

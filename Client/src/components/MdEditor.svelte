@@ -1,22 +1,40 @@
 <script>
     import { Input} from 'svelma'
-
     import {  afterUpdate } from 'svelte';
+    import {makeId} from "../http/local_id";
+    import {ajaxFileUpload} from "../http/communicator";
+    import {MdEditor} from "../utils/md_editor";
+
+    export let availableForever;
+    export let availableForHours;
 
     let loading;
     let fileName;
     let mdEditor;
 
-    let simplemde;
+    let simplemde = MdEditor.simplemde;
     afterUpdate(() => {
-        simplemde = new SimpleMDE({ element: mdEditor});
+        if(!MdEditor.simplemde) {
+            simplemde = new SimpleMDE({element: mdEditor});
+            MdEditor.simplemde = simplemde;
+        }
     });
 
 
-    function onClickSend() {
-        let text = simplemde.value();
-        if(text.trim()){
+    async function onClickSend() {
+        let text = simplemde.value().trim();
+        if (text) {
             console.log(simplemde.value());
+            let blob = new Blob([text], {type: "text/markdown;charset=utf-8"});
+            fileName = fileName.trim();
+            if (!fileName)
+                fileName = makeId(16);
+            //todo throw exception on certain explorers
+            //https://caniuse.com/#search=file
+            let mdFile = new File([blob], fileName + ".md");
+            await ajaxFileUpload([mdFile], availableForever, new Date(Date.now() + (availableForHours * 60 * 60 * 1000)).valueOf());
+            simplemde.value("");
+            fileName = "";
         }
     }
 
@@ -63,7 +81,7 @@
 <textarea bind:this={mdEditor}></textarea>
 <div id="button-container">
     <div class="fileNameInputBottomSmall" style="display: flex; flex-direction: row; align-items: center; flex-wrap: nowrap;}">
-        <Input type="number"
+        <Input type="text"
                bind:value={fileName}
                placeholder="Filename">_</Input>
         <p>.md</p>

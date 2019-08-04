@@ -110,3 +110,28 @@ function returnPromise(request, resolve, reject, skipParse) {
         }
     }
 }
+
+export function getTextFromUrl(url){
+    // read text from URL location
+    return new Promise((resolve, reject) => {
+        console.debug("Requesting: (GET) ", url);
+        let request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.send(null);
+        request.onreadystatechange = function () {
+            if (request.readyState === 4) {
+                let type = request.getResponseHeader('Content-Type');
+                if (type.indexOf("text") !== 1 && (request.status >= 200 && request.status < 300 || request.status === 304)) {
+                    resolve( request.responseText);
+                } else {
+                    try {
+                        let response = request.response;
+                        reject(response);
+                    } catch (e) {
+                        reject(request);
+                    }
+                }
+            }
+        }
+    });
+}

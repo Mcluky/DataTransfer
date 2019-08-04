@@ -37,6 +37,7 @@ const extensions = {
 
     env: icons.text,
     txt: icons.text,
+    md: icons.text,
 
 
     file: icons.file

@@ -8,7 +8,7 @@ export let getLocalId = () => {
     return localId
 };
 
-function makeId(length) {
+export function makeId(length) {
     let text = "";
     let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 

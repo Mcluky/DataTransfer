@@ -33,7 +33,7 @@
     <div class="box">
         <div class="container" id="innerWindow" bind:this={scrollDiv} >
             {#each files as file, i}
-                <File file={file} fromThisId={fromThisId(file.uploadedBy)}/>
+                <File file={file} fromThisId={fromThisId(file.uploadedBy)} oneOfLastOnes={files.length - i <= 1}/>
             {:else}
                 <div style="text-align: center">
                     <p>No Files yet</p>
