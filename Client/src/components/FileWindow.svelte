@@ -3,6 +3,7 @@
     import {filesArrayStore} from "../stores/files_array_store";
     import File from "./File.svelte"
     import {getLocalId} from "../http/local_id";
+    import {scrollFileWindowStore} from "../stores/scroll_file_window_store";
 
     let localId = getLocalId();
     $: fromThisId = (id) => id === localId;
@@ -15,8 +16,23 @@
         files = value;
     });
 
+    const unsubscribeScrollFileWindowStore= scrollFileWindowStore.subscribe(value => {
+        switch (value.position) {
+            case 'bottom':
+                setTimeout(scrollToBottom, 250);
+                break;
+            case 'top':
+                setTimeout(scrollToTop, 250);
+                break;
+        }
+    });
+
     function scrollToBottom(){
         scrollDiv.scrollTo(0, scrollDiv.scrollHeight);
+    }
+
+    function scrollToTop(){
+        scrollDiv.scrollTo(0, 0);
     }
 </script>
 
@@ -33,7 +49,7 @@
     <div class="box">
         <div class="container" id="innerWindow" bind:this={scrollDiv} >
             {#each files as file, i}
-                <File file={file} fromThisId={fromThisId(file.uploadedBy)} oneOfLastOnes={files.length - i <= 1}/>
+                <File file={file} fromThisId={fromThisId(file.uploadedBy)} lastOne={files.length - i <= 1} />
             {:else}
                 <div style="text-align: center">
                     <p>No Files yet</p>

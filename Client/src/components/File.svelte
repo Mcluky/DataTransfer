@@ -6,10 +6,11 @@
     import {Dialog} from 'svelma'
     import {copyStringToClipboard} from "../utils/clipboard";
     import ToolTip from "./ToolTip.svelte";
+    import {scrollFileWindowStore, scrollFileWindowStoreData} from "../stores/scroll_file_window_store";
 
     export let file;
     export let fromThisId;
-    export let oneOfLastOnes;
+    export let lastOne;
 
     $: fileUrl = originUrl + "/api/data/download/" + file.id;
     $: fileSeeUrl = originUrl + "/api/data/see/" + file.id;
@@ -38,10 +39,12 @@
                 readableText = await getTextFromUrl(fileSeeUrl);
             }
         }
+        if(lastOne)
+            setTimeout(() => scrollFileWindowStore.update(value => new scrollFileWindowStoreData('bottom')), 210);
     }
 
     //open the text if one of the last ones
-    $: if(oneOfLastOnes){
+    $: if(lastOne && readable){
         showReadable();
     }
 

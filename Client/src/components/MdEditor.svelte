@@ -7,8 +7,8 @@
 
     export let availableForever;
     export let availableForHours;
+    export let loading;
 
-    let loading;
     let fileName;
     let mdEditor;
 
