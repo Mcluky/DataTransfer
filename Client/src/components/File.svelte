@@ -34,7 +34,7 @@
             if (file.name.endsWith(".md")) {
                 let converter = new showdown.Converter();
                 let mdText = await getTextFromUrl(fileSeeUrl);
-                readableText = converter.makeHtml(mdText);
+                readableText = DOMPurify.sanitize(converter.makeHtml(mdText)) + " ";
             } else {
                 readableText = await getTextFromUrl(fileSeeUrl);
             }
