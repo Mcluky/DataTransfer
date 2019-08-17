@@ -36,7 +36,7 @@
                 let mdText = await getTextFromUrl(fileSeeUrl);
                 readableText = DOMPurify.sanitize(converter.makeHtml(mdText)) + " ";
             } else {
-                readableText = await getTextFromUrl(fileSeeUrl);
+                readableText = DOMPurify.sanitize(await getTextFromUrl(fileSeeUrl));
             }
         }
         if(lastOne)
