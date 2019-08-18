@@ -1,5 +1,6 @@
 <script>
-    import {fileStore} from "../stores/file_store";
+    import { quintOut } from 'svelte/easing';
+    import { flip } from 'svelte/animate';
     import {filesArrayStore} from "../stores/files_array_store";
     import File from "./File.svelte"
     import {getLocalId} from "../http/local_id";
@@ -12,27 +13,42 @@
     let scrollDiv;
 
     const unsubscribeFilesArrayStore = filesArrayStore.subscribe(value => {
-        setTimeout(scrollToBottom, 250);
-        files = value;
+        files = [...value];
     });
 
     const unsubscribeScrollFileWindowStore= scrollFileWindowStore.subscribe(value => {
         switch (value.position) {
             case 'bottom':
-                setTimeout(scrollToBottom, 250);
+                scrollToBottom();
                 break;
             case 'top':
-                setTimeout(scrollToTop, 250);
+                scrollToTop();
                 break;
         }
     });
 
     function scrollToBottom(){
-        scrollDiv.scrollTo(0, scrollDiv.scrollHeight);
+        if(scrollDiv)
+            scrollDiv.scrollTo(0, scrollDiv.scrollHeight);
     }
 
     function scrollToTop(){
-        scrollDiv.scrollTo(0, 0);
+        if(scrollDiv)
+            scrollDiv.scrollTo(0, 0);
+    }
+
+    function fileTransition(node, params) {
+        const style = getComputedStyle(node);
+        const transform = style.transform === 'none' ? '' : style.transform;
+
+        return {
+            duration: 600,
+            easing: quintOut,
+            css: t => `
+					transform: ${transform} scale(${t});
+					opacity: ${t}
+				`
+        };
     }
 </script>
 
@@ -47,9 +63,12 @@
 
 <div class="section" style="margin-top: -15px">
     <div class="box">
-        <div class="container" id="innerWindow" bind:this={scrollDiv} >
-            {#each files as file, i}
-                <File file={file} fromThisId={fromThisId(file.uploadedBy)} lastOne={files.length - i <= 1} />
+        <div class="container" id="innerWindow" bind:this={scrollDiv}>
+            {#each files as file, i (file.id)}
+                <div transition:fileTransition on:introend="{ () => scrollToBottom()}" animate:flip="{{duration: 300}}"
+                    style="margin-bottom: 15px">
+                    <File file={file} fromThisId={fromThisId(file.uploadedBy)} lastOne={files.length - i <= 1} />
+                </div>
             {:else}
                 <div style="text-align: center">
                     <p>No Files yet</p>

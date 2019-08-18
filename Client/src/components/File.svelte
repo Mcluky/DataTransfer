@@ -1,5 +1,5 @@
 <script>
-    import {slide, fade, fly} from 'svelte/transition'
+    import { fade, slide} from 'svelte/transition'
     import {originUrl} from "../config";
     import {getClassNameForFilename} from "../utils/font_awsome_filetyp_mapper/mapper";
     import {deleteFile, getTextFromUrl} from "../http/communicator";
@@ -18,13 +18,15 @@
 
     let readable = file.name.endsWith(".md") || file.name.endsWith(".txt");
     $: readableCollapseOpen = false;
-    $: readableText = "";
+    $: readableText =  null;
 
     function removeFile() {
         deleteFile(file.id);
     }
 
     function showInfo() {
+        file.readable = readable;
+        file.readableText = readableText;
         Dialog.alert("<pre>" + JSON.stringify(file, undefined, 2) + "</pre>");
     }
 
@@ -39,8 +41,6 @@
                 readableText = DOMPurify.sanitize(await getTextFromUrl(fileSeeUrl));
             }
         }
-        if(lastOne)
-            setTimeout(() => scrollFileWindowStore.update(value => new scrollFileWindowStoreData('bottom')), 210);
     }
 
     //open the text if one of the last ones
@@ -68,11 +68,7 @@
         }
     }
 </style>
-
-<!-- todo out transition (doesnt work like intended)
-out:fly="{{ x: 100, duration: 5000 }}"
--->
-<div class="box" in:slide="{{duration: 250 }}" style="background-color: { fromThisId ? '#23d160' : 'white'}" >
+<div class="box" style="background-color: { fromThisId ? '#23d160' : 'white'}" >
     <article class="media" >
         <div class="media-left">
             <i class={fileIcon}></i>
@@ -141,7 +137,7 @@ out:fly="{{ x: 100, duration: 5000 }}"
                 </div>
             </nav>
             {#if readableCollapseOpen }
-                <div transition:slide >
+                <div transition:slide on:introend="{ () => {if(lastOne) scrollFileWindowStore.update(value => new scrollFileWindowStoreData('bottom')) }}">
                     {#if readableText }
                         <iframe style="margin-top: -18px; margin-bottom: -18px; height: fit-content" srcdoc='<head>
                         {iframeStyles}
