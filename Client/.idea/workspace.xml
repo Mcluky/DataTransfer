@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b7706b57-d7b9-40d7-aef8-1d5563f24e2e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/File.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/File.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/src/router/api/data/data_router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/router/api/data/data_router.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,8 +28,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="C:/zuehlke_projects/PSSMON/atlassian-jira-software-8.1.0-source/jira-project" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -37,7 +37,7 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\Projects\DataTransfer\Client\node_modules\prettier" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="ts.external.directory.path" value="C:\Users\melu\AppData\Local\JetBrains\Toolbox\apps\WebStorm\ch-0\192.5728.87\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="ts.external.directory.path" value="C:\Users\Lukas\AppData\Local\JetBrains\Toolbox\apps\WebStorm\ch-0\191.7479.14\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -114,13 +114,8 @@
       <workItem from="1563887293577" duration="659000" />
       <workItem from="1564674117721" duration="268000" />
       <workItem from="1564674639387" duration="3539000" />
-      <workItem from="1564929224316" duration="13843000" />
-      <workItem from="1565005347065" duration="203000" />
-      <workItem from="1565005564248" duration="2346000" />
-      <workItem from="1565156448423" duration="81000" />
-      <workItem from="1565368860637" duration="104000" />
-      <workItem from="1565451708479" duration="2314000" />
-      <workItem from="1565959433025" duration="665000" />
+      <workItem from="1564929224316" duration="13966000" />
+      <workItem from="1566044606019" duration="1738000" />
     </task>
     <task id="LOCAL-00001" summary=":sparkles: :construction: :bug: Fixed small bugs/issues on server, initial commit on client">
       <created>1563667349924</created>
@@ -143,12 +138,12 @@
       <option name="project" value="LOCAL" />
       <updated>1563742386222</updated>
     </task>
-    <task id="LOCAL-00004" summary=":lock: :construction: xss fixing">
-      <created>1565457944344</created>
+    <task id="LOCAL-00004" summary=":sparkles: Added md support">
+      <created>1564955848599</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1565457944344</updated>
+      <updated>1564955848599</updated>
     </task>
     <option name="localTasksCounter" value="5" />
     <servers />
@@ -172,7 +167,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value=":sparkles: :construction: :bug: Fixed small bugs/issues on server, initial commit on client" />
     <MESSAGE value=":construction: :bug: Fixed small bugs/issues on server, work in progress on client" />
-    <MESSAGE value=":lock: :construction: xss fixing" />
-    <option name="LAST_COMMIT_MESSAGE" value=":lock: :construction: xss fixing" />
+    <MESSAGE value=":sparkles: Added md support" />
+    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Added md support" />
   </component>
 </project>

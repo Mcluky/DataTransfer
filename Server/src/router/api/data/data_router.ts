@@ -8,6 +8,8 @@ import path from "path";
 // @ts-ignore
 import SSE from "express-sse";
 import SSEMessage, {SSEEvent} from "../../../response/sse_message";
+import sanitize from "sanitize-filename";
+import {replaceAll} from "../../../util/replace_all";
 
 const dataRouter = express.Router();
 
@@ -41,13 +43,11 @@ dataRouter.get("/:id", async (req, res, next) => {
 
 dataRouter.post("/", async (req, res, next) => {
     console.log("Received file upload request");
-    // @ts-ignore
-    //let clientIp = (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '').split(',')[0].trim();
-    let uploadedBy = req.fields.uploadedBy as string;
+    let uploadedBy = replaceAll(sanitize(req.fields.uploadedBy as string), ";", "");
     let newFiles: DbFile[] = [];
 
     for (let fileKey in req.files) {
-        let name = req.files[fileKey].name;
+        let name = replaceAll(sanitize(req.files[fileKey].name), ";", "");
         let currentFileName = req.files[fileKey].path.replace(/^.*[\\\/]/, '');
         let hash = req.files[fileKey].path.replace(/^.*[\\\/]/, '').split("_")[1];
         let uploadDate = new Date();

@@ -19,7 +19,8 @@
     "express-formidable": "^1.2.0",
     "express-sse": "^0.5.1",
     "get-folder-size": "^2.0.1",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "sanitize-filename": "^1.6.2"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.1",
@@ -30,6 +31,7 @@
     "@types/http-errors": "^1.6.1",
     "@types/morgan": "^1.7.35",
     "@types/node": "^12.6.8",
+    "@types/sanitize-filename": "^1.1.28",
     "nodemon": "^1.19.1",
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
