@@ -1,7 +1,7 @@
 <script>
     import {Field, Input, Icon, Switch, Button} from 'svelma'
     import {ajaxFileUpload} from "../http/communicator"
-    import {toastStore, ToastStoreData} from "../stores/toast_store";
+    import {toastStore, ToastStoreData, ToastStoreDataType} from "../stores/toast_store";
     import MdEditor from "./MdEditor.svelte"
     import {dndStore} from "../stores/dnd_store";
     import ToolTip from "./ToolTip.svelte"
@@ -37,22 +37,25 @@
             ajaxFileUpload(files, metaFile.availableForever, availableUntil)
                     .then(value => {
                         loading = false;
+                        let responseText = 'Successfully uploaded file';
+                        if(inputFiles.length > 1)
+                            responseText += 's';
                         inputFiles = [];
+                        toastStore.update(tsd => new ToastStoreData(responseText, ToastStoreDataType.INFO))
                     }).catch(reason => {
                         loading = false;
                         console.error(reason);
-                        //todo do something meaningful
+                        toastStore.update(tsd => new ToastStoreData('An error occurred while uploading.', ToastStoreDataType.DANGER))
                     }
             );
         } else {
-            toastStore.update(tsd => new ToastStoreData('Upload is already in progress, please wait until its finished.', 'is-danger', 'is-top'))
+            toastStore.update(tsd => new ToastStoreData('Upload is already in progress, please wait until its finished.', ToastStoreDataType.DANGER))
         }
     }
 
     function onClickSave() {
-        // todo change this if text is added
         if (inputFiles.length === 0) {
-            toastStore.update(tsd => new ToastStoreData('You must at least select one file.', 'is-danger', 'is-top'))
+            toastStore.update(tsd => new ToastStoreData('You must at least select one file.', ToastStoreDataType.DANGER))
             return
         }
         uploadFiles(inputFiles);

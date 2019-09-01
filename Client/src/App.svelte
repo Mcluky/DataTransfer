@@ -1,26 +1,22 @@
 <script>
     //todo fix eslint
+    import 'bulma/css/bulma.css'
     import Form from "./components/Form.svelte";
     import FileWindow from "./components/FileWindow.svelte";
-    import {Toast} from 'svelma'
-    import {toastStore} from "./stores/toast_store";
     import {afterUpdate} from 'svelte';
     import {dndStore} from "./stores/dnd_store";
+    import {toastStore} from "./stores/toast_store"
+    import Toast from "./components/Toast.svelte";
 
+    let toaster;
 
-    //todo fix where it is displayed
     const unsubscribeToastStore = toastStore.subscribe(value => {
         if (value != null)
-            Toast.create({
-                message: value.message,
-                type: value.type,
-                position: value.position
-            });
+            toaster.showToast(value.message, value.timeInMs, value.color, value.textColor);
     });
 
     //dropdown enabling
     let dropZone;
-
 
     function handleDragOver(event) {
         event.preventDefault();
@@ -80,6 +76,7 @@
     }
 </style>
 
+<Toast bind:this={toaster} ></Toast>
 <div bind:this={dropZone}>
     <div id="parentContainer">
         <div class="flexBox">

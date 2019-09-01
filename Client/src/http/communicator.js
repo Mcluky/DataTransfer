@@ -73,9 +73,7 @@ export function ajaxFileUpload(files, availableForever, availableUntil) {
 
         formData.append('availableForever', availableForever);
         formData.append('availableUntil', availableUntil);
-        formData.append('uploadedBy', uploadedBy)
-        //todo maybe add text
-        //formData.append('text', text.value);
+        formData.append('uploadedBy', uploadedBy);
 
         let request = new XMLHttpRequest();
 

@@ -1,6 +1,7 @@
 import {writable, readable} from 'svelte/store';
 import {originUrl} from "../config";
 import {getAllFiles} from "../http/communicator";
+import {toastStore, ToastStoreData, ToastStoreDataType} from "./toast_store"
 
 export const fileStore = readable([], set => {
     //Initial files
@@ -12,8 +13,8 @@ export const fileStore = readable([], set => {
             set(initialDataEvent);
         }
     }).catch(reason => {
-        //todo error
         console.error("initial files", reason);
+        toastStore.update(tsd => new ToastStoreData("Unable to get initial files!", ToastStoreDataType.DANGER));
     });
 
 

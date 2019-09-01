@@ -3,6 +3,7 @@
   "description": "A application to easily transfer any data from device to device",
   "version": "1.0.0",
   "devDependencies": {
+    "@beyonk/svelte-notifications": "^1.1.2",
     "eslint": "^6.0.1",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-prettier": "^3.1.0",
@@ -16,13 +17,13 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-svelte": "^5.0.3",
     "rollup-plugin-terser": "^4.0.4",
-    "svelte": "^3.8.1"
+    "svelte": "^3.9.1"
   },
   "dependencies": {
     "bulma": "^0.7.5",
     "rollup-plugin-postcss": "^2.0.3",
     "sirv-cli": "^0.4.4",
-    "svelma": "0.0.10"
+    "svelma": "0.0.11"
   },
   "scripts": {
     "build": "rollup -c",

@@ -4,6 +4,7 @@
     import {makeId} from "../http/local_id";
     import {ajaxFileUpload} from "../http/communicator";
     import {MdEditor} from "../utils/md_editor";
+    import {ToastStoreData, ToastStoreDataType, toastStore} from "../stores/toast_store";
 
     export let availableForever;
     export let availableForHours;
@@ -24,17 +25,23 @@
     async function onClickSend() {
         let text = simplemde.value().trim();
         if (text) {
-            console.log(simplemde.value());
-            let blob = new Blob([text], {type: "text/markdown;charset=utf-8"});
-            fileName = fileName.trim();
-            if (!fileName)
-                fileName = makeId(16);
-            //todo throw exception on certain explorers
-            //https://caniuse.com/#search=file
-            let mdFile = new File([blob], fileName + ".md");
-            await ajaxFileUpload([mdFile], availableForever, new Date(Date.now() + (availableForHours * 60 * 60 * 1000)).valueOf());
-            simplemde.value("");
-            fileName = "";
+            try {
+                console.log(simplemde.value());
+                let blob = new Blob([text], {type: "text/markdown;charset=utf-8"});
+                fileName = fileName.trim();
+                if (!fileName)
+                    fileName = makeId(16);
+                //todo throw exception on certain explorers
+                //https://caniuse.com/#search=file
+                let mdFile = new File([blob], fileName + ".md");
+                await ajaxFileUpload([mdFile], availableForever, new Date(Date.now() + (availableForHours * 60 * 60 * 1000)).valueOf());
+                toastStore.update(tsd => new ToastStoreData("Successfully uploaded text!", ToastStoreDataType.INFO));
+                simplemde.value("");
+            } catch (e) {
+                toastStore.update(tsd => new ToastStoreData("An error occurred while uploading.", ToastStoreDataType.DANGER));
+            } finally {
+                fileName = "";
+            }
         }
     }
 

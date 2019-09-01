@@ -7,6 +7,7 @@
     import {copyStringToClipboard} from "../utils/clipboard";
     import ToolTip from "./ToolTip.svelte";
     import {scrollFileWindowStore, scrollFileWindowStoreData} from "../stores/scroll_file_window_store";
+    import {toastStore, ToastStoreData, ToastStoreDataType} from "../stores/toast_store"
 
     export let file;
     export let fromThisId;
@@ -21,7 +22,9 @@
     $: readableText =  null;
 
     function removeFile() {
-        deleteFile(file.id);
+        deleteFile(file.id)
+                .then(() => toastStore.update(tsd => new ToastStoreData("Deleted file successfully!", ToastStoreDataType.INFO)))
+                .catch(() => toastStore.update(tsd => new ToastStoreData("Failed to delete file!", ToastStoreDataType.DANGER)));
     }
 
     function showInfo() {
@@ -91,7 +94,7 @@
             <nav class="level is-mobile" in:fade>
                 <div class="level-left">
                     <ToolTip toolTipText="See file in browser">
-                        <a class="level-item no-link-dec" aria-label="trash" href={fileSeeUrl}>
+                        <a target="_blank" rel="noopener noreferrer" class="level-item no-link-dec" aria-label="trash" href={fileSeeUrl}>
                         <span class="icon is-small">
                             <i class="far fa-eye"></i>
                         </span>
@@ -140,6 +143,7 @@
                 <div transition:slide on:introend="{ () => {if(lastOne) scrollFileWindowStore.update(value => new scrollFileWindowStoreData('bottom')) }}">
                     {#if readableText }
                         <iframe style="margin-top: -18px; margin-bottom: -18px; height: fit-content" srcdoc='<head>
+                        <base target="_blank" rel="noopener noreferrer"/>
                         {iframeStyles}
                         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
                         </head><html><body>{readableText}</body></html>'></iframe>
