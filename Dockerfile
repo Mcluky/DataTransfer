@@ -10,8 +10,9 @@ RUN npm i
 WORKDIR /
 
 # Install back end
-RUN mkdir -p /Server/
 RUN mkdir -p /Server/static/
+RUN mkdir -p /Server/files/
+VOLUME /Server/files/
 COPY /Server/package.json /Server/
 WORKDIR /Server/
 RUN npm i

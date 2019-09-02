@@ -5,7 +5,7 @@
     $: notifications = [];
     let notificationCounter = 0;
 
-    export function showToast(msg, timeInMs = 3000, color = 'rgba(41,42,56,0.9)', textColor = 'rgba(255,255,255,0.9)') {
+    export function showToast(msg, timeInMs = 3000, color = 'rgba(41,42,56,1)', textColor = 'rgba(255,255,255,1)') {
         if (msg) {
             notificationCounter++;
             let id = notificationCounter;
