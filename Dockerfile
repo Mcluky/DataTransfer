@@ -9,8 +9,8 @@ RUN mkdir -p /Client/ \
     WORKDIR / 
 
 # Install back end
-RUN mk  dir -p /Server/static/ \
-     RUN mkdir -p /Server/files/ \
+RUN mkdir -p /Server/static/ \
+    RUN mkdir -p /Server/files/ \
     VOLUME /Server/files/ \
     COPY /Server/package.json /Server/ \
     WORKDIR /Server/ \
