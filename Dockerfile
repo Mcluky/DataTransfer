@@ -18,13 +18,13 @@ RUN mkdir -p /Server/static/ \
 
 # Build front end
 WORKDIR /Client/ \
-    COPY /Client/ . \
-    RUN npm run-script build
+    COPY /Client/ . 
+RUN npm run-script build
 
 # Build back end
 WORKDIR /Server/ \
-    COPY /Server/ . \
-    RUN npm run-script build
+    COPY /Server/ . 
+RUN npm run-script build
 
 # copy frontend into server
 RUN cp -a /Client/public/. /Server/static/
